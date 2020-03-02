@@ -1,70 +1,83 @@
 package almacen.dis.almacen;
 
-import java.util.GregorianCalendar;
 
-public class Producto {
+public class Producto<Pendiente> {
 	
-	private String puesto;
-	private String empresa;
-	private GregorianCalendar fechaInicio;
-	private GregorianCalendar fechaFin;
-	private String detalles;
 	
-	public Producto(String puesto, String empresa, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) { 
-		this.puesto = puesto;
-		this.empresa = empresa;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.detalles = "";
+	private String Codigo;
+	private String Nombre;
+	private String Descripcion;
+	private int Stock;
+	
+	
+	public enum Localizacion {
+		Pasillo, Estanteria, Estante
+	};
+	
+	private Localizacion localizacion;
+	private Boolean Pendiente;
+	
+	
+	public Producto( String Codigo, String Nombre, String Descripcion, int Stock, Localizacion localizacion, Boolean Pendiente ) { 
+		
+		this.Codigo = Codigo;
+		this.Nombre = Nombre;
+		this.Descripcion = Descripcion;
+		this.Stock = Stock;
+		this.localizacion = localizacion;
+		this.Pendiente = Pendiente;
 	}
 	
-	public Producto(String puesto, String empresa, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, String detalles) { 
-		this.puesto = puesto;
-		this.empresa = empresa;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.detalles = detalles;
+	
+	public Boolean getPendiente() {
+		return Pendiente;
 	}
 
-	public String getPuesto() {
-		return puesto;
+	public void setPendiente(Boolean pendiente) {
+		this.Pendiente= Pendiente;
+	}
+	
+	public Localizacion getLocalizacion() {
+		return localizacion;
 	}
 
-	public void setPuesto(String puesto) {
-		this.puesto = puesto;
+	public void setLocalizacion(Localizacion Localizacion) {
+		this.localizacion= Localizacion;
 	}
 
-	public String getEmpresa() {
-		return empresa;
+	
+	public int getStock() {
+		return Stock;
 	}
 
-	public void setEmpresa(String empresa) {
-		this.empresa = empresa;
+	public void setStock(int Stock) {
+		this.Stock = Stock;
 	}
 
-	public GregorianCalendar getFechaInicio() {
-		return fechaInicio;
+	public String getDescripcion() {
+		return Descripcion;
 	}
 
-	public void setFechaInicio(GregorianCalendar fechaInicio) {
-		this.fechaInicio = fechaInicio;
+	public void setDescripcion(String Descripcion) {
+		this.Descripcion = Descripcion;
+	}
+	
+	public String getCodigo() {
+		return Codigo;
 	}
 
-	public GregorianCalendar getFechaFin() {
-		return fechaFin;
+	public void setCodigo(String Codigo) {
+		this.Codigo = Codigo;
+	}
+	
+	public String getNombre() {
+		return Nombre;
 	}
 
-	public void setFechaFin(GregorianCalendar fechaFin) {
-		this.fechaFin = fechaFin;
+	public void setNombre(String Nombre) {
+		this.Nombre = Nombre;
 	}
 
-	public String getDetalles() {
-		return detalles;
-	}
-
-	public void setDetalles(String detalles) {
-		this.detalles = detalles;
-	}
 	
 	
 }
