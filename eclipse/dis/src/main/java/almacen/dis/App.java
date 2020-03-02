@@ -1,4 +1,4 @@
-package disg4.xmlcv;
+package almacen.dis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import disg4.xmlcv.cv.Almacen;
-import disg4.xmlcv.cv.Almacen.Destino;
-import disg4.xmlcv.cv.Almacen.Disponibilidad;
-import disg4.xmlcv.cv.Producto;
-import disg4.xmlcv.cv.Clientes;
-import disg4.xmlcv.cv.Clientes.Nivel;
-import disg4.xmlcv.cv.Pedidos;
+import almacen.dis.almacen.Almacen;
+import almacen.dis.almacen.Almacen.Destino;
+import almacen.dis.almacen.Almacen.Disponibilidad;
+import almacen.dis.almacen.Producto;
+import almacen.dis.almacen.Pedidos;
+import almacen.dis.almacen.Pedidos.Nivel;
+import almacen.dis.almacen.Clientes;
 
 public class App {
 
@@ -22,17 +22,11 @@ public class App {
 
 		Scanner input = new Scanner(System.in);
 
-		System.out.println("\n\n  MM'\"\"\"\"'YMM M\"\"MMMMM\"\"M oo        v2.0 ");
-		System.out.println("  M' .mmm. `M M  MMMMM  M                        ");
-		System.out.println("  M  MMMMMooM M  MMMMP  M dP .d8888b. dP  dP  dP ");
-		System.out.println("  M  MMMMMMMM M  MMMM' .M 88 88ooood8 88  88  88 ");
-		System.out.println("  M. `MMM' .M M  MMP' .MM 88 88.  ... 88.88b.88' ");
-		System.out.println("  MM.     .dM M     .dMMM dP `88888P' 8888P Y8P  ");
-		System.out.println("  MMMMMMMMMMM MMMMMMMMMMM                        \n\n");
+		System.out.println("Sistema de Gestión de Almacenes");
 
 		System.out.print("Ruta del archivo xml: ");
 		filePath = input.next();
-		Almacen cv = new Almacen(filePath);
+		Almacen al = new Almacen(filePath);
 		
 		printHelp();
 
@@ -63,16 +57,16 @@ public class App {
 
 			// Comando para pasar a JSON
 			if (command.equalsIgnoreCase("json")) {
-				System.out.println(cv.toJSON());
+				System.out.println(al.toJSON());
 			}
 
 			// Comando para guardar archivo
 			if (command.equalsIgnoreCase("save")) {
 				if (arguments.size() > 0) {
-					cv.saveFile(arguments.get(0));
+					al.saveFile(arguments.get(0));
 					System.out.println("Archivo guardado en " + arguments.get(0));
 				} else {
-					cv.saveFile(filePath);
+					al.saveFile(filePath);
 					System.out.println("Archivo guardado en " + filePath);
 				}
 			}
@@ -82,12 +76,12 @@ public class App {
 				if (arguments.size() > 0) {
 					// Mostrar todo el CV
 					if (arguments.get(0).equalsIgnoreCase("all")) {
-						cv.printCV("CV", true, true, true, true);
+						al.printCV("CV", true, true, true, true);
 					}
 					// Mostrar PERSONAL
 					if (arguments.get(0).equalsIgnoreCase("datos")) {
 						if (arguments.size() == 1) {
-							cv.printCV("CV", true, false, false, false);
+							al.printCV("CV", true, false, false, false);
 						} else {
 							System.out.println("display <all|datos|estudios|experiencia|idiomas>");
 						}
@@ -95,7 +89,7 @@ public class App {
 					// Mostrar ESTUDIOS
 					if (arguments.get(0).equalsIgnoreCase("estudios")) {
 						if (arguments.size() == 1) {
-							cv.printCV("CV", false, true, false, false);
+							al.printCV("CV", false, true, false, false);
 						} else {
 							System.out.println("display <all|datos|estudios|experiencia|idiomas>");
 						}
@@ -103,7 +97,7 @@ public class App {
 					// Mostrar EXPERIENCIA
 					if (arguments.get(0).equalsIgnoreCase("experiencia")) {
 						if (arguments.size() == 1) {
-							cv.printCV("CV", false, false, true, false);
+							al.printCV("CV", false, false, true, false);
 						} else {
 							System.out.println("display <all|datos|estudios|experiencia|idiomas>");
 						}
@@ -111,7 +105,7 @@ public class App {
 					// Mostrar IDIOMAS
 					if (arguments.get(0).equalsIgnoreCase("idiomas")) {
 						if (arguments.size() == 1) {
-							cv.printCV("CV", false, false, false, true);
+							al.printCV("CV", false, false, false, true);
 						} else {
 							System.out.println("display <all|datos|estudios|experiencia|idiomas>");
 						}
@@ -128,7 +122,7 @@ public class App {
 					if (arguments.get(0).equalsIgnoreCase("idioma")) {
 						if (arguments.size() == 3) {
 							if("BASICO|MEDIO|FLUIDO|NATIVO".contains(arguments.get(2))) {
-								cv.addIdioma(new Clientes(arguments.get(1), Nivel.valueOf(arguments.get(2))));
+								al.addIdioma(new Pedidos(arguments.get(1), Nivel.valueOf(arguments.get(2))));
 								System.out.println("Añadido correctamente!");
 							} else {
 								System.out.println("Nivel de idioma no válido!");
@@ -140,7 +134,7 @@ public class App {
 					// Añadiendo experiencia
 					if (arguments.get(0).equalsIgnoreCase("experiencia")) {
 						if (arguments.size() == 6) {
-							cv.addExperiencia(new Producto(arguments.get(1), arguments.get(2), null, null, arguments.get(5)));
+							al.addExperiencia(new Producto(arguments.get(1), arguments.get(2), null, null, arguments.get(5)));
 							System.out.println("Añadido correctamente!");
 						} else {
 							System.out.println("add experiencia <empresa> <puesto> <FechaInicio> <FechaFin> <detalles>");
@@ -149,7 +143,7 @@ public class App {
 					// Añadiendo titulo
 					if (arguments.get(0).equalsIgnoreCase("titulo")) {
 						if (arguments.size() == 6) {
-							cv.addEstudios(new Pedidos(arguments.get(1), arguments.get(2), null, null, arguments.get(5)));
+							al.addEstudios(new Clientes(arguments.get(1), arguments.get(2), null, null, arguments.get(5)));
 							System.out.println("Añadido correctamente!");
 						} else {
 							System.out.println("add titulo <nombre> <entidad> <FechaInicio> <FechaFin> <detalles>");
@@ -166,7 +160,7 @@ public class App {
 					// Modificar nombre
 					if (arguments.get(0).equalsIgnoreCase("nombre")) {
 						if (arguments.size() == 2) {
-							cv.setNombreCompleto(arguments.get(1));
+							al.setNombreCompleto(arguments.get(1));
 							System.out.println("Modificado correctamente!");
 						} else {
 							System.out.println("mod <nombre> VALOR");
@@ -175,7 +169,7 @@ public class App {
 					// Modificar telefono
 					if (arguments.get(0).equalsIgnoreCase("telefono")) {
 						if (arguments.size() == 2) {
-							cv.setTelefono(Integer.parseInt(arguments.get(1)));
+							al.setTelefono(Integer.parseInt(arguments.get(1)));
 							System.out.println("Modificado correctamente!");
 						} else {
 							System.out.println("mod <telefono> VALOR");
@@ -184,7 +178,7 @@ public class App {
 					// Modificar email
 					if (arguments.get(0).equalsIgnoreCase("email")) {
 						if (arguments.size() == 2) {
-							cv.setEmail(arguments.get(1));
+							al.setEmail(arguments.get(1));
 							System.out.println("Modificado correctamente!");
 						} else {
 							System.out.println("mod <email> VALOR");
@@ -194,7 +188,7 @@ public class App {
 					if (arguments.get(0).equalsIgnoreCase("disponibilidad")) {
 						if (arguments.size() == 2) {
 							if("BAJA|MEDIA|ALTA".contains(arguments.get(1))) {
-								cv.setDisponibilidad(Disponibilidad.valueOf(arguments.get(1)));
+								al.setDisponibilidad(Disponibilidad.valueOf(arguments.get(1)));
 								System.out.println("Modificado correctamente!");
 							} else {
 								System.out.println("Disponibilidad no válida!");
@@ -208,7 +202,7 @@ public class App {
 						if (arguments.size() == 2) {
 							
 							if("NACIONAL|EUROPA|ASIA|AMERICA_NORTE|AMERICA_SUR|OTROS".contains(arguments.get(1))) {
-								cv.setDestinoMovilidad(Destino.valueOf(arguments.get(1)));
+								al.setDestinoMovilidad(Destino.valueOf(arguments.get(1)));
 								System.out.println("Modificado correctamente!");
 							} else {
 								System.out.println("Destino de movilidad no válido!");
@@ -220,7 +214,7 @@ public class App {
 					// Modificar disponibilidad
 					if (arguments.get(0).equalsIgnoreCase("tiempo")) {
 						if (arguments.size() == 2) {
-							cv.setTiempoMovilidad(Integer.parseInt(arguments.get(1)));
+							al.setTiempoMovilidad(Integer.parseInt(arguments.get(1)));
 							System.out.println("Modificado correctamente!");
 						} else {
 							System.out.println("mod <tiempo> <meses>");
@@ -237,11 +231,11 @@ public class App {
 					// Eliminar idioma
 					if (arguments.get(0).equalsIgnoreCase("idioma")) {
 						if (arguments.size() == 2) {
-							cv.removeIdioma(Integer.parseInt(arguments.get(1)));
+							al.removeIdioma(Integer.parseInt(arguments.get(1)));
 						} else {
 							System.out.println("IDs de Idiomas:");
-							for (int i = 0; i < cv.getIdiomas().size(); i++) {
-								System.out.println(i + " - " + cv.getIdiomas().get(i).getNombre());
+							for (int i = 0; i < al.getIdiomas().size(); i++) {
+								System.out.println(i + " - " + al.getIdiomas().get(i).getNombre());
 								System.out.println("Eliminado correctamente!");
 							}
 							System.out.println("remove idioma <id>");
@@ -250,11 +244,11 @@ public class App {
 					// Eliminar experiencia
 					if (arguments.get(0).equalsIgnoreCase("experiencia")) {
 						if (arguments.size() == 2) {
-							cv.removeExperiencia(Integer.parseInt(arguments.get(1)));
+							al.removeExperiencia(Integer.parseInt(arguments.get(1)));
 						} else {
 							System.out.println("IDs de Experiencias:");
-							for (int i = 0; i < cv.getExperiencia().size(); i++) {
-								System.out.println(i + " - " + cv.getExperiencia().get(i).getEmpresa());
+							for (int i = 0; i < al.getExperiencia().size(); i++) {
+								System.out.println(i + " - " + al.getExperiencia().get(i).getEmpresa());
 								System.out.println("Eliminado correctamente!");
 							}
 							System.out.println("remove experiencia <id>");
@@ -263,12 +257,12 @@ public class App {
 					// Eliminar titulo
 					if (arguments.get(0).equalsIgnoreCase("titulo")) {
 						if (arguments.size() == 2) {
-							cv.removeEstudios(Integer.parseInt(arguments.get(1)));
+							al.removeEstudios(Integer.parseInt(arguments.get(1)));
 							System.out.println("Eliminado correctamente!");
 						} else {
 							System.out.println("IDs de Titulos:");
-							for (int i = 0; i < cv.getEstudios().size(); i++) {
-								System.out.println(i + " - " + cv.getEstudios().get(i).getNombre());
+							for (int i = 0; i < al.getEstudios().size(); i++) {
+								System.out.println(i + " - " + al.getEstudios().get(i).getNombre());
 							}
 							System.out.println("remove titulo <id>");
 						}

@@ -1,4 +1,4 @@
-package disg4.xmlcv.cv;
+package almacen.dis.almacen;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,7 +18,7 @@ import org.jdom2.output.XMLOutputter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import disg4.xmlcv.cv.Clientes.Nivel;
+import almacen.dis.almacen.Pedidos.Nivel;
 
 public class Almacen {
 
@@ -41,20 +41,20 @@ public class Almacen {
 
 	private Disponibilidad disponibilidad;
 
-	private ArrayList<Pedidos> estudios;
+	private ArrayList<Clientes> estudios;
 	private ArrayList<Producto> experiencia;
-	private ArrayList<Clientes> idiomas;
+	private ArrayList<Pedidos> idiomas;
 
 	public Almacen() {
-		this.estudios = new ArrayList<Pedidos>();
+		this.estudios = new ArrayList<Clientes>();
 		this.experiencia = new ArrayList<Producto>();
-		this.idiomas = new ArrayList<Clientes>();
+		this.idiomas = new ArrayList<Pedidos>();
 	}
 
 	public Almacen(String filePath) {
-		this.estudios = new ArrayList<Pedidos>();
+		this.estudios = new ArrayList<Clientes>();
 		this.experiencia = new ArrayList<Producto>();
-		this.idiomas = new ArrayList<Clientes>();
+		this.idiomas = new ArrayList<Pedidos>();
 		loadFile(filePath);
 	}
 
@@ -68,9 +68,9 @@ public class Almacen {
 		this.destino = destino;
 		this.tiempo = tiempo;
 		this.disponibilidad = disponibilidad;
-		this.estudios = new ArrayList<Pedidos>();
+		this.estudios = new ArrayList<Clientes>();
 		this.experiencia = new ArrayList<Producto>();
-		this.idiomas = new ArrayList<Clientes>();
+		this.idiomas = new ArrayList<Pedidos>();
 	}
 
 	public boolean saveFile(String path) {
@@ -95,7 +95,7 @@ public class Almacen {
 			doc.getRootElement().addContent(node1);
 
 			Element node2 = new Element("Estudios");
-			for (Pedidos titulo : estudios) {
+			for (Clientes titulo : estudios) {
 				Element node21 = new Element("Titulo");
 				node21.addContent(new Element("Nombre").setText(titulo.getNombre()));
 				node21.addContent(new Element("Entidad").setText(titulo.getEntidad()));
@@ -123,7 +123,7 @@ public class Almacen {
 			doc.getRootElement().addContent(node3);
 
 			Element node4 = new Element("Idiomas");
-			for (Clientes idioma : this.idiomas) {
+			for (Pedidos idioma : this.idiomas) {
 				Element node41 = new Element("Idioma");
 				node41.addContent(new Element("Nombre").setText(idioma.getNombre()));
 				node41.addContent(new Element("Nivel").setText(idioma.getNivel().toString()));
@@ -173,11 +173,11 @@ public class Almacen {
 			for (Element node21 : node2.getChildren("Titulo")) {
 				String detalles = node21.getChildText("Detalles");
 				if (detalles == null || detalles.isEmpty()) {
-					estudios.add(new Pedidos(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
+					estudios.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
 							getCalendar(node21.getChildText("FechaInicio")),
 							getCalendar(node21.getChildText("FechaFin"))));
 				} else {
-					estudios.add(new Pedidos(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
+					estudios.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
 							getCalendar(node21.getChildText("FechaInicio")),
 							getCalendar(node21.getChildText("FechaFin")), detalles));
 				}
@@ -199,7 +199,7 @@ public class Almacen {
 
 			Element node4 = rootNode.getChild("Idiomas");
 			for (Element node41 : node4.getChildren("Idioma")) {
-				idiomas.add(new Clientes(node41.getChildText("Nombre"), Nivel.valueOf(node41.getChildText("Nivel"))));
+				idiomas.add(new Pedidos(node41.getChildText("Nombre"), Nivel.valueOf(node41.getChildText("Nivel"))));
 			}
 
 		} catch (Exception e) {
@@ -230,7 +230,7 @@ public class Almacen {
 		if (mostrarEstudios) {
 			output += "- Estudios\n";
 			if (estudios.size() > 0) {
-				for (Pedidos titulo : estudios) {
+				for (Clientes titulo : estudios) {
 					output += "\t[" + dateToString(titulo.getFechaInicio()) + " - " + dateToString(titulo.getFechaFin())
 							+ "] " + titulo.getNombre() + " en " + titulo.getEntidad() + "\n\tInformación Adicional: "
 							+ titulo.getDetalles() + "\n";
@@ -257,7 +257,7 @@ public class Almacen {
 		if (mostrarIdiomas) {
 			output += "- Idiomas\n";
 			if (idiomas.size() > 0) {
-				for (Clientes idioma : idiomas) {
+				for (Pedidos idioma : idiomas) {
 					output += "\t" + idioma.getNombre() + " nivel " + idioma.getNivel() + "\n";
 				}
 			} else {
@@ -280,7 +280,7 @@ public class Almacen {
 		return cal;
 	}
 
-	public void addEstudios(Pedidos titulo) {
+	public void addEstudios(Clientes titulo) {
 		this.estudios.add(titulo);
 	}
 
@@ -296,7 +296,7 @@ public class Almacen {
 		this.experiencia.remove(index);
 	}
 
-	public void addIdioma(Clientes idioma) {
+	public void addIdioma(Pedidos idioma) {
 		this.idiomas.add(idioma);
 	}
 
@@ -373,7 +373,7 @@ public class Almacen {
 		return gson.toJson(this);
 	}
 
-	public ArrayList<Pedidos> getEstudios() {
+	public ArrayList<Clientes> getEstudios() {
 		return estudios;
 	}
 
@@ -381,7 +381,7 @@ public class Almacen {
 		return experiencia;
 	}
 
-	public ArrayList<Clientes> getIdiomas() {
+	public ArrayList<Pedidos> getIdiomas() {
 		return idiomas;
 	}
 	

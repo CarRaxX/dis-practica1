@@ -1,6 +1,6 @@
-package disg4.xmlcv.cv;
+package almacen.dis.almacen;
 
-public class Clientes {
+public class Pedidos {
 
 	public enum Nivel {
 		BASICO, MEDIO, FLUIDO, NATIVO
@@ -9,7 +9,7 @@ public class Clientes {
 	private String nombre;
 	private Nivel nivel;
 
-	public Clientes(String nombre, Nivel nivel) {
+	public Pedidos(String nombre, Nivel nivel) {
 		this.nombre = nombre;
 		this.nivel = nivel;
 	}

@@ -1,8 +1,8 @@
-package disg4.xmlcv.cv;
+package almacen.dis.almacen;
 
 import java.util.GregorianCalendar;
 
-public class Pedidos {
+public class Clientes {
 	
 	private String nombre;
 	private String entidad;
@@ -10,7 +10,7 @@ public class Pedidos {
 	private GregorianCalendar fechaFin;
 	private String detalles;
 	
-	public Pedidos(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) { 
+	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) { 
 		this.nombre = nombre;
 		this.entidad = entidad;
 		this.fechaInicio = fechaInicio;
@@ -18,7 +18,7 @@ public class Pedidos {
 		this.detalles = "";
 	}
 	
-	public Pedidos(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, String detalles) { 
+	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, String detalles) { 
 		this.nombre = nombre;
 		this.entidad = entidad;
 		this.fechaInicio = fechaInicio;
