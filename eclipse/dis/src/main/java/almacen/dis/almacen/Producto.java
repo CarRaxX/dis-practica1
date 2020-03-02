@@ -1,40 +1,81 @@
 package almacen.dis.almacen;
 
-import java.util.GregorianCalendar;
 
-public class Producto {
+public class Producto<Pendiente> {
 	
 	
-	private String codigo;
-	private String nombre;
-	private String empresa;
-	private GregorianCalendar fechaInicio;
-	private GregorianCalendar fechaFin;
-	private String detalles;
+	private String Codigo;
+	private String Nombre;
+	private String Descripcion;
+	private int Stock;
 	
-	public Producto( String codigo, String nombre, ) { 
+	
+	public enum Localizacion {
+		Pasillo, Estanteria, Estante
+	};
+	
+	private Localizacion localizacion;
+	private Boolean Pendiente;
+	
+	
+	public Producto( String Codigo, String Nombre, String Descripcion, int Stock, Localizacion localizacion, Boolean Pendiente ) { 
 		
-		this.codigo = codigo;
-		this.nombre = nombre;
-		
+		this.Codigo = Codigo;
+		this.Nombre = Nombre;
+		this.Descripcion = Descripcion;
+		this.Stock = Stock;
+		this.localizacion = localizacion;
+		this.Pendiente = Pendiente;
 	}
 	
 	
-
-	public String getcodigo() {
-		return codigo;
+	public Boolean getPendiente() {
+		return Pendiente;
 	}
 
-	public void setcodigo(String codigo) {
-		this.codigo = codigo;
+	public void setPendiente(Boolean pendiente) {
+		this.Pendiente= Pendiente;
 	}
 	
-	public String getnombre() {
-		return nombre;
+	public Localizacion getLocalizacion() {
+		return localizacion;
 	}
 
-	public void setnombre(String nombre) {
-		this.nombre = nombre;
+	public void setLocalizacion(Localizacion Localizacion) {
+		this.localizacion= Localizacion;
+	}
+
+	
+	public int getStock() {
+		return Stock;
+	}
+
+	public void setStock(int Stock) {
+		this.Stock = Stock;
+	}
+
+	public String getDescripcion() {
+		return Descripcion;
+	}
+
+	public void setDescripcion(String Descripcion) {
+		this.Descripcion = Descripcion;
+	}
+	
+	public String getCodigo() {
+		return Codigo;
+	}
+
+	public void setCodigo(String Codigo) {
+		this.Codigo = Codigo;
+	}
+	
+	public String getNombre() {
+		return Nombre;
+	}
+
+	public void setNombre(String Nombre) {
+		this.Nombre = Nombre;
 	}
 
 	
