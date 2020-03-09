@@ -18,89 +18,53 @@ import org.jdom2.output.XMLOutputter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import almacen.dis.almacen.Pedidos.Nivel;
-
 public class Almacen {
-
-	public enum Destino {
-		NACIONAL, EUROPA, ASIA, AMERICA_NORTE, AMERICA_SUR, OTROS
-	};
-
-	public enum Disponibilidad {
-		BAJA, MEDIA, ALTA
-	};
-
-	private String nombreCompleto;
-	private String email;
-	private GregorianCalendar fechaNacimiento;
-	private String dni;
-	private int telefono;
-
-	private Destino destino;
-	private int tiempo;
-
-	private Disponibilidad disponibilidad;
-
-	private ArrayList<Clientes> estudios;
-	private ArrayList<Producto> experiencia;
-	private ArrayList<Pedidos> idiomas;
+	
+	private String almacenID;
+	
+	private ArrayList<Clientes> clientes;
+	private ArrayList<Producto> productos;
+	private ArrayList<Pedidos> pedidos;
 
 	public Almacen() {
-		this.estudios = new ArrayList<Clientes>();
-		this.experiencia = new ArrayList<Producto>();
-		this.idiomas = new ArrayList<Pedidos>();
+		this.clientes = new ArrayList<Clientes>();
+		this.productos = new ArrayList<Producto>();
+		this.pedidos = new ArrayList<Pedidos>();
 	}
 
-	public Almacen(String filePath) {
-		this.estudios = new ArrayList<Clientes>();
-		this.experiencia = new ArrayList<Producto>();
-		this.idiomas = new ArrayList<Pedidos>();
+	public Almacen(String almacenID, String filePath) {
+		this.almacenID = almacenID;
+		this.clientes = new ArrayList<Clientes>();
+		this.productos = new ArrayList<Producto>();
+		this.pedidos = new ArrayList<Pedidos>();
 		loadFile(filePath);
 	}
 
-	public Almacen(String nombreCompleto, String email, GregorianCalendar fechaNacimiento, String dni, int telefono,
-			Destino destino, int tiempo, Disponibilidad disponibilidad) {
-		this.nombreCompleto = nombreCompleto;
-		this.email = email;
-		this.fechaNacimiento = fechaNacimiento;
-		this.dni = dni;
-		this.telefono = telefono;
-		this.destino = destino;
-		this.tiempo = tiempo;
-		this.disponibilidad = disponibilidad;
-		this.estudios = new ArrayList<Clientes>();
-		this.experiencia = new ArrayList<Producto>();
-		this.idiomas = new ArrayList<Pedidos>();
+	public Almacen(String almacenID) {
+		this.almacenID = almacenID;
+		this.clientes = new ArrayList<Clientes>();
+		this.productos = new ArrayList<Producto>();
+		this.pedidos = new ArrayList<Pedidos>();
 	}
 
 	public boolean saveFile(String path) {
 		try {
 
-			Element rootNode = new Element("CurriculumVitae");
+			Element rootNode = new Element("Almacen_" + almacenID);
 			Document doc = new Document(rootNode);
 
-			Element node1 = new Element("DatosPersonales");
-			node1.addContent(new Element("NombreCompleto").setText(nombreCompleto));
-			node1.addContent(new Element("DNI").setText(dni));
-			node1.addContent(new Element("Telefono").setText("" + telefono));
-			node1.addContent(new Element("Email").setText(email));
-			node1.addContent(new Element("FechaNacimiento").setText(dateToString(fechaNacimiento)));
-			node1.addContent(new Element("Disponibilidad").setText(disponibilidad.toString()));
+			Element node1 = new Element("DatosAlmacen");
+			node1.addContent(new Element("AlmacenID").setText(almacenID));
 
-			Element node11 = new Element("MovilidadGeografica");
-			node11.addContent(new Element("Destino").setText(destino.toString()));
-			node11.addContent(new Element("Tiempo").setText("" + tiempo));
-
-			node1.addContent(node11);
 			doc.getRootElement().addContent(node1);
 
-			Element node2 = new Element("Estudios");
-			for (Clientes titulo : estudios) {
-				Element node21 = new Element("Titulo");
-				node21.addContent(new Element("Nombre").setText(titulo.getNombre()));
-				node21.addContent(new Element("Entidad").setText(titulo.getEntidad()));
-				node21.addContent(new Element("FechaInicio").setText(dateToString(titulo.getFechaInicio())));
-				node21.addContent(new Element("FechaFin").setText(dateToString(titulo.getFechaFin())));
+			Element node2 = new Element("Clientes");
+			for (Clientes cliente : clientes) {
+				Element node21 = new Element("Cliente");
+				node21.addContent(new Element("Apellidos").setText(cliente.getNombre()));
+				node21.addContent(new Element("Email").setText(cliente.getEntidad()));
+				node21.addContent(new Element("Telf. Contacto").setText(dateToString(cliente.getFechaInicio())));
+				node21.addContent(new Element("Direccion").setText(dateToString(cliente.getFechaFin())));
 				if (titulo.getDetalles() != null && !titulo.getDetalles().isEmpty())
 					node21.addContent(new Element("Detalles").setText(titulo.getDetalles()));
 
@@ -109,7 +73,7 @@ public class Almacen {
 			doc.getRootElement().addContent(node2);
 
 			Element node3 = new Element("ExperienciaProfesional");
-			for (Producto experiencia : this.experiencia) {
+			for (Producto experiencia : this.productos) {
 				Element node31 = new Element("Experiencia");
 				node31.addContent(new Element("Nombre").setText(experiencia.getPuesto()));
 				node31.addContent(new Element("Entidad").setText(experiencia.getEmpresa()));
@@ -123,7 +87,7 @@ public class Almacen {
 			doc.getRootElement().addContent(node3);
 
 			Element node4 = new Element("Idiomas");
-			for (Pedidos idioma : this.idiomas) {
+			for (Pedidos idioma : this.pedidos) {
 				Element node41 = new Element("Idioma");
 				node41.addContent(new Element("Nombre").setText(idioma.getNombre()));
 				node41.addContent(new Element("Nivel").setText(idioma.getNivel().toString()));
@@ -173,11 +137,11 @@ public class Almacen {
 			for (Element node21 : node2.getChildren("Titulo")) {
 				String detalles = node21.getChildText("Detalles");
 				if (detalles == null || detalles.isEmpty()) {
-					estudios.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
+					clientes.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
 							getCalendar(node21.getChildText("FechaInicio")),
 							getCalendar(node21.getChildText("FechaFin"))));
 				} else {
-					estudios.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
+					clientes.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
 							getCalendar(node21.getChildText("FechaInicio")),
 							getCalendar(node21.getChildText("FechaFin")), detalles));
 				}
@@ -187,11 +151,11 @@ public class Almacen {
 			for (Element node31 : node3.getChildren("Experiencia")) {
 				String detalles = node31.getChildText("Detalles");
 				if (detalles == null || detalles.isEmpty()) {
-					experiencia.add(new Producto(node31.getChildText("Puesto"), node31.getChildText("Empresa"),
+					productos.add(new Producto(node31.getChildText("Puesto"), node31.getChildText("Empresa"),
 							getCalendar(node31.getChildText("FechaInicio")),
 							getCalendar(node31.getChildText("FechaFin"))));
 				} else {
-					experiencia.add(new Producto(node31.getChildText("Puesto"), node31.getChildText("Empresa"),
+					productos.add(new Producto(node31.getChildText("Puesto"), node31.getChildText("Empresa"),
 							getCalendar(node31.getChildText("FechaInicio")),
 							getCalendar(node31.getChildText("FechaFin")), detalles));
 				}
@@ -199,7 +163,7 @@ public class Almacen {
 
 			Element node4 = rootNode.getChild("Idiomas");
 			for (Element node41 : node4.getChildren("Idioma")) {
-				idiomas.add(new Pedidos(node41.getChildText("Nombre"), Nivel.valueOf(node41.getChildText("Nivel"))));
+				pedidos.add(new Pedidos(node41.getChildText("Nombre"), Nivel.valueOf(node41.getChildText("Nivel"))));
 			}
 
 		} catch (Exception e) {
@@ -229,8 +193,8 @@ public class Almacen {
 
 		if (mostrarEstudios) {
 			output += "- Estudios\n";
-			if (estudios.size() > 0) {
-				for (Clientes titulo : estudios) {
+			if (clientes.size() > 0) {
+				for (Clientes titulo : clientes) {
 					output += "\t[" + dateToString(titulo.getFechaInicio()) + " - " + dateToString(titulo.getFechaFin())
 							+ "] " + titulo.getNombre() + " en " + titulo.getEntidad() + "\n\tInformación Adicional: "
 							+ titulo.getDetalles() + "\n";
@@ -242,8 +206,8 @@ public class Almacen {
 
 		if (mostrarExperiencia) {
 			output += "- Experiencia\n";
-			if (experiencia.size() > 0) {
-				for (Producto experiencia : this.experiencia) {
+			if (productos.size() > 0) {
+				for (Producto experiencia : this.productos) {
 					output += "\t[" + dateToString(experiencia.getFechaInicio()) + " - "
 							+ dateToString(experiencia.getFechaFin()) + "] " + experiencia.getPuesto() + " en "
 							+ experiencia.getEmpresa() + "\n\tInformación Adicional: " + experiencia.getDetalles()
@@ -256,8 +220,8 @@ public class Almacen {
 
 		if (mostrarIdiomas) {
 			output += "- Idiomas\n";
-			if (idiomas.size() > 0) {
-				for (Pedidos idioma : idiomas) {
+			if (pedidos.size() > 0) {
+				for (Pedidos idioma : pedidos) {
 					output += "\t" + idioma.getNombre() + " nivel " + idioma.getNivel() + "\n";
 				}
 			} else {
@@ -281,27 +245,27 @@ public class Almacen {
 	}
 
 	public void addEstudios(Clientes titulo) {
-		this.estudios.add(titulo);
+		this.clientes.add(titulo);
 	}
 
 	public void removeEstudios(int index) {
-		this.estudios.remove(index);
+		this.clientes.remove(index);
 	}
 
 	public void addExperiencia(Producto experiencia) {
-		this.experiencia.add(experiencia);
+		this.productos.add(experiencia);
 	}
 
 	public void removeExperiencia(int index) {
-		this.experiencia.remove(index);
+		this.productos.remove(index);
 	}
 
 	public void addIdioma(Pedidos idioma) {
-		this.idiomas.add(idioma);
+		this.pedidos.add(idioma);
 	}
 
 	public void removeIdioma(int index) {
-		this.idiomas.remove(index);
+		this.pedidos.remove(index);
 	}
 
 	public String getNombreCompleto() {
@@ -374,15 +338,15 @@ public class Almacen {
 	}
 
 	public ArrayList<Clientes> getEstudios() {
-		return estudios;
+		return clientes;
 	}
 
 	public ArrayList<Producto> getExperiencia() {
-		return experiencia;
+		return productos;
 	}
 
 	public ArrayList<Pedidos> getIdiomas() {
-		return idiomas;
+		return pedidos;
 	}
 	
 	

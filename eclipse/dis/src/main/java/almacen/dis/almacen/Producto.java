@@ -1,40 +1,35 @@
 package almacen.dis.almacen;
 
 
-public class Producto<Pendiente> {
-	
-	
-	private String Codigo;
-	private String Nombre;
-	private String Descripcion;
-	private int Stock;
-	
+public class Producto{
+
+	private String codigo;
+	private String nombre;
+	private String descripcion;
+	private int stock;
+	private boolean pendiente;
 	
 	public enum Localizacion {
 		Pasillo, Estanteria, Estante
 	};
 	
 	private Localizacion localizacion;
-	private Boolean Pendiente;
 	
-	
-	public Producto( String Codigo, String Nombre, String Descripcion, int Stock, Localizacion localizacion, Boolean Pendiente ) { 
-		
-		this.Codigo = Codigo;
-		this.Nombre = Nombre;
-		this.Descripcion = Descripcion;
-		this.Stock = Stock;
+	public Producto( String codigo, String nombre, String descripcion, int stock, Localizacion localizacion, boolean pendiente) { 
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.stock = stock;
 		this.localizacion = localizacion;
-		this.Pendiente = Pendiente;
+		this.pendiente = pendiente;
 	}
 	
-	
-	public Boolean getPendiente() {
-		return Pendiente;
+	public boolean getPendiente() {
+		return pendiente;
 	}
 
-	public void setPendiente(Boolean pendiente) {
-		this.Pendiente= Pendiente;
+	public void setPendiente(boolean pendiente) {
+		this.pendiente= pendiente;
 	}
 	
 	public Localizacion getLocalizacion() {
@@ -47,37 +42,34 @@ public class Producto<Pendiente> {
 
 	
 	public int getStock() {
-		return Stock;
+		return stock;
 	}
 
-	public void setStock(int Stock) {
-		this.Stock = Stock;
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 	public String getDescripcion() {
-		return Descripcion;
+		return descripcion;
 	}
 
-	public void setDescripcion(String Descripcion) {
-		this.Descripcion = Descripcion;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 	public String getCodigo() {
-		return Codigo;
+		return codigo;
 	}
 
-	public void setCodigo(String Codigo) {
-		this.Codigo = Codigo;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 	
 	public String getNombre() {
-		return Nombre;
+		return nombre;
 	}
 
-	public void setNombre(String Nombre) {
-		this.Nombre = Nombre;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
-
-	
-	
 }

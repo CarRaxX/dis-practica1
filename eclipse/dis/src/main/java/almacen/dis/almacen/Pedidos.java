@@ -1,17 +1,23 @@
 package almacen.dis.almacen;
 
+import java.util.ArrayList;
+
+import almacen.dis.almacen.direccionEntrega.DireccionEntrega;
+
 public class Pedidos {
 
 	private String productos;
 	private int cantidad;
 	private String destinatario;
 	private String fechaDeEntregaEstimada;
+	private ArrayList<DireccionEntrega> direccionEntrega;
 
-	public Pedidos(String productos, int cantidad, String destinatario, String fechaDeEntregaEstimada) {
+	public Pedidos(String productos, int cantidad, String destinatario, String fechaDeEntregaEstimada, ArrayList<DireccionEntrega> direccionEntrega) {
 		this.productos = productos;
 		this.cantidad = cantidad;
 		this.destinatario = destinatario;
 		this.fechaDeEntregaEstimada = fechaDeEntregaEstimada;
+		this.setDireccionEntrega(new ArrayList<DireccionEntrega>());
 	}
 
 	public String getproductos() {
@@ -45,5 +51,12 @@ public class Pedidos {
 	public void setfechaDeEntregaEstimada(String fechaDeEntregaEstimada) {
 		this.fechaDeEntregaEstimada = fechaDeEntregaEstimada;
 	}
-	
+
+	public ArrayList<DireccionEntrega> getDireccionEntrega() {
+		return direccionEntrega;
+	}
+
+	public void setDireccionEntrega(ArrayList<DireccionEntrega> direccionEntrega) {
+		this.direccionEntrega = direccionEntrega;
+	}
 }

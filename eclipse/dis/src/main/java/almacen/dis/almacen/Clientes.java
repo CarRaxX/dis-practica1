@@ -1,6 +1,9 @@
 package almacen.dis.almacen;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
+import almacen.dis.almacen.direccionEntrega.Direccion;
 
 public class Clientes {
 	
@@ -9,20 +12,23 @@ public class Clientes {
 	private GregorianCalendar fechaInicio;
 	private GregorianCalendar fechaFin;
 	private String detalles;
+	private ArrayList<Direccion> direccion;
 	
-	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) { 
+	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, ArrayList<Direccion> direccion) { 
 		this.nombre = nombre;
 		this.entidad = entidad;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
+		this.setDireccion(new ArrayList<Direccion>());
 		this.detalles = "";
 	}
 	
-	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, String detalles) { 
+	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, ArrayList<Direccion> direccion, String detalles) { 
 		this.nombre = nombre;
 		this.entidad = entidad;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
+		this.setDireccion(new ArrayList<Direccion>());
 		this.detalles = detalles;
 	}
 
@@ -65,7 +71,13 @@ public class Clientes {
 	public void setEntidad(String entidad) {
 		this.entidad = entidad;
 	}
-	
-	
+
+	public ArrayList<Direccion> getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(ArrayList<Direccion> direccion) {
+		this.direccion = direccion;
+	}
 	
 }
