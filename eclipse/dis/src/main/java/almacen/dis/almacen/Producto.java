@@ -10,7 +10,7 @@ public class Producto{
 	private boolean pendiente;
 	
 	public enum Localizacion {
-		Pasillo, Estanteria, Estante
+		PASILLO, ESTANTERIA, ESTANTE
 	};
 	
 	private Localizacion localizacion;

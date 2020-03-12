@@ -2,13 +2,7 @@ package almacen.dis.almacen;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -18,6 +12,10 @@ import org.jdom2.output.XMLOutputter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import almacen.dis.almacen.Producto.Localizacion;
+import almacen.dis.almacen.direccionEntrega.Direccion;
+import almacen.dis.almacen.direccionEntrega.DireccionEntrega;
+
 public class Almacen {
 	
 	private String almacenID;
@@ -25,6 +23,8 @@ public class Almacen {
 	private ArrayList<Clientes> clientes;
 	private ArrayList<Producto> productos;
 	private ArrayList<Pedidos> pedidos;
+	private ArrayList<Direccion> direcciones;
+	private ArrayList<DireccionEntrega> direccionesEntrega;
 
 	public Almacen() {
 		this.clientes = new ArrayList<Clientes>();
@@ -62,37 +62,71 @@ public class Almacen {
 			for (Clientes cliente : clientes) {
 				Element node21 = new Element("Cliente");
 				node21.addContent(new Element("Nombre").setText(cliente.getNombre()));
-				node21.addContent(new Element("Apellidos").setText(cliente.getNombre()));
-				node21.addContent(new Element("Email").setText(cliente.getEntidad()));
-				node21.addContent(new Element("Telf. Contacto").setText(dateToString(cliente.getFechaInicio())));
-				node21.addContent(new Element("Direccion").setText(dateToString(cliente.getFechaFin())));
-				if (titulo.getDetalles() != null && !titulo.getDetalles().isEmpty())
-					node21.addContent(new Element("Detalles").setText(titulo.getDetalles()));
+				node21.addContent(new Element("Apellidos").setText(cliente.getApellidos()));
+				node21.addContent(new Element("Email").setText(cliente.getEmail()));
+				node21.addContent(new Element("Telf. Contacto").setText(cliente.getTelfContacto()));
+
+				for (Direccion direccion : cliente.getDireccion()) {
+					Element node211 = new Element("Direccion");
+					node211.addContent(new Element("Calle").setText(direccion.getCalle()));
+					node211.addContent(new Element("Número").setText(Integer.toString(direccion.getNumero())));
+					node211.addContent(new Element("Código Postal").setText(Integer.toString(direccion.getCodigoPostal())));
+					node211.addContent(new Element("Población").setText(direccion.getPoblacion()));
+					node211.addContent(new Element("País").setText(direccion.getPais()));
+					
+					node21.addContent(node211);
+				}
 
 				node2.addContent(node21);
 			}
 			doc.getRootElement().addContent(node2);
 
-			Element node3 = new Element("ExperienciaProfesional");
-			for (Producto experiencia : this.productos) {
-				Element node31 = new Element("Experiencia");
-				node31.addContent(new Element("Nombre").setText(experiencia.getPuesto()));
-				node31.addContent(new Element("Entidad").setText(experiencia.getEmpresa()));
-				node31.addContent(new Element("FechaInicio").setText(dateToString(experiencia.getFechaInicio())));
-				node31.addContent(new Element("FechaFin").setText(dateToString(experiencia.getFechaFin())));
-				if (experiencia.getDetalles() != null && !experiencia.getDetalles().isEmpty())
-					node31.addContent(new Element("Detalles").setText(experiencia.getDetalles()));
-
+			Element node3 = new Element("Productos");
+			for (Producto producto : productos) {
+				Element node31 = new Element("Producto");
+				node31.addContent(new Element("Código").setText(producto.getCodigo()));
+				node31.addContent(new Element("Nombre").setText(producto.getNombre()));
+				node31.addContent(new Element("Descripción").setText(producto.getDescripcion()));
+				node31.addContent(new Element("Stock").setText(Integer.toString(producto.getStock())));
+				node31.addContent(new Element("Localización").setText(producto.getLocalizacion().toString()));
+				node31.addContent(new Element("Pendientes").setText(Boolean.toString(producto.getPendiente())));
+				
 				node3.addContent(node31);
 			}
 			doc.getRootElement().addContent(node3);
 
-			Element node4 = new Element("Idiomas");
-			for (Pedidos idioma : this.pedidos) {
-				Element node41 = new Element("Idioma");
-				node41.addContent(new Element("Nombre").setText(idioma.getNombre()));
-				node41.addContent(new Element("Nivel").setText(idioma.getNivel().toString()));
-
+			Element node4 = new Element("Pedidos");
+			for (Pedidos pedido : pedidos) {
+				Element node41 = new Element("Pedido");
+				
+				for (Producto producto : productos) {
+					Element node411 = new Element("Producto");
+					node411.addContent(new Element("Código").setText(producto.getCodigo()));
+					node411.addContent(new Element("Nombre").setText(producto.getNombre()));
+					node411.addContent(new Element("Descripción").setText(producto.getDescripcion()));
+					node411.addContent(new Element("Stock").setText(Integer.toString(producto.getStock())));
+					node411.addContent(new Element("Pendientes").setText(Boolean.toString(producto.getPendiente())));
+					
+					node41.addContent(node411);
+				}
+				
+				node41.addContent(new Element("Cantidad").setText(Integer.toString(pedido.getCantidad())));
+				
+				for (DireccionEntrega direccionEntrega : pedido.getDireccionEntrega()) {
+					Element node421 = new Element("Direccion de entrega");
+					node421.addContent(new Element("Calle").setText(direccionEntrega.getCalle()));
+					node421.addContent(new Element("Número").setText(Integer.toString(direccionEntrega.getNumero())));
+					node421.addContent(new Element("Código Postal").setText(Integer.toString(direccionEntrega.getCodigoPostal())));
+					node421.addContent(new Element("Población").setText(direccionEntrega.getPoblacion()));
+					node421.addContent(new Element("País").setText(direccionEntrega.getPais()));
+					
+					node41.addContent(node421);
+				}
+				
+				node41.addContent(new Element("Destinatario").setText(pedido.getDestinatario()));
+				node41.addContent(new Element("Fecha de entrega estimada").setText(pedido.getFechaDeEntregaEstimada()));
+				
+				
 				node4.addContent(node41);
 			}
 			doc.getRootElement().addContent(node4);
@@ -112,7 +146,7 @@ public class Almacen {
 
 	public boolean loadFile(String path) {
 		SAXBuilder builder = new SAXBuilder();
-		// Damos por vÃ¡lido la ruta absoluta al archivo a cargar
+		// Damos por valida la ruta absoluta al archivo a cargar
 		File xmlFile = new File(path);
 
 		try {
@@ -120,51 +154,32 @@ public class Almacen {
 			Document document = (Document) builder.build(xmlFile);
 			Element rootNode = document.getRootElement();
 
-			Element node1 = rootNode.getChild("DatosPersonales");
+			Element node1 = rootNode.getChild("DatosAlmacen");
 
-			this.nombreCompleto = node1.getChildText("NombreCompleto");
-			this.email = node1.getChildText("Email");
-			this.fechaNacimiento = getCalendar(node1.getChildText("FechaNacimiento"));
-			this.dni = node1.getChildText("DNI");
-			this.telefono = Integer.parseInt(node1.getChildText("Telefono"));
-			this.disponibilidad = Disponibilidad.valueOf(node1.getChildText("Disponibilidad"));
+			this.almacenID = node1.getChildText("AlmacenID");
 
-			for (Element node11 : node1.getChildren("MovilidadGeografica")) {
-				this.destino = Destino.valueOf(node11.getChildText("Destino"));
-				this.tiempo = Integer.parseInt(node11.getChildText("Tiempo"));
-			}
-
-			Element node2 = rootNode.getChild("Estudios");
-			for (Element node21 : node2.getChildren("Titulo")) {
-				String detalles = node21.getChildText("Detalles");
-				if (detalles == null || detalles.isEmpty()) {
-					clientes.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
-							getCalendar(node21.getChildText("FechaInicio")),
-							getCalendar(node21.getChildText("FechaFin"))));
-				} else {
-					clientes.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Entidad"),
-							getCalendar(node21.getChildText("FechaInicio")),
-							getCalendar(node21.getChildText("FechaFin")), detalles));
+			Element node2 = rootNode.getChild("Clientes");
+			for (Element node21 : node2.getChildren("Cliente")) {
+				for (Element node211 : node21.getChildren("Direccion")) {
+					direcciones.add(new Direccion(node211.getChildText("Calle"), Integer.parseInt(node211.getChildText("Numero")), Integer.parseInt(node211.getChildText("Código Postal")), node211.getChildText("Población"), node211.getChildText("País")));
+					clientes.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Apellidos"), node21.getChildText("Email"), node21.getChildText("Telf. Contacto"), direcciones));	
 				}
 			}
 
-			Element node3 = rootNode.getChild("ExperienciaProfesional");
-			for (Element node31 : node3.getChildren("Experiencia")) {
-				String detalles = node31.getChildText("Detalles");
-				if (detalles == null || detalles.isEmpty()) {
-					productos.add(new Producto(node31.getChildText("Puesto"), node31.getChildText("Empresa"),
-							getCalendar(node31.getChildText("FechaInicio")),
-							getCalendar(node31.getChildText("FechaFin"))));
-				} else {
-					productos.add(new Producto(node31.getChildText("Puesto"), node31.getChildText("Empresa"),
-							getCalendar(node31.getChildText("FechaInicio")),
-							getCalendar(node31.getChildText("FechaFin")), detalles));
-				}
+			Element node3 = rootNode.getChild("Productos");
+			for (Element node31 : node3.getChildren("Producto")) {
+				productos.add(new Producto(node31.getChildText("Código"), node31.getChildText("Nombre"), node31.getChildText("Descripción"), Integer.parseInt(node31.getChildText("Stock")), Localizacion.valueOf(node31.getChildText("Localización")), Boolean.parseBoolean(node31.getChildText("Pendientes"))));
 			}
 
-			Element node4 = rootNode.getChild("Idiomas");
-			for (Element node41 : node4.getChildren("Idioma")) {
-				pedidos.add(new Pedidos(node41.getChildText("Nombre"), Nivel.valueOf(node41.getChildText("Nivel"))));
+			Element node4 = rootNode.getChild("Pedidos");
+			for (Element node41 : node4.getChildren("Pedido")) {
+				for (Element node411 : node4.getChildren("Producto")) {
+					for (Element node421 : node4.getChildren("Direccion de entrega")) {
+						productos.add(new Producto(node411.getChildText("Código"), node411.getChildText("Nombre"), node411.getChildText("Descripción"), Integer.parseInt(node411.getChildText("Stock")), Localizacion.valueOf(node411.getChildText("Localización")), Boolean.parseBoolean(node411.getChildText("Pendientes"))));
+						direccionesEntrega.add(new DireccionEntrega(node421.getChildText("Calle"), Integer.parseInt(node421.getChildText("Numero")), Integer.parseInt(node421.getChildText("Código Postal")), node421.getChildText("Población"), node421.getChildText("País")));
+						pedidos.add(new Pedidos(productos, Integer.parseInt(node41.getChildText("Cantidad")), direccionesEntrega, node41.getChildText("Destinatario"), node41.getChildText("Fecha de entrega estimada")));
+					}
+				}
 			}
 
 		} catch (Exception e) {
@@ -174,163 +189,146 @@ public class Almacen {
 		return true;
 	}
 
-	public void printCV(String encabezado, boolean mostrarDatosPersonales, boolean mostrarEstudios,
-			boolean mostrarExperiencia, boolean mostrarIdiomas) {
+	public void printAlmacen(String encabezado, boolean mostrarDatosAlmacen, boolean mostrarClientes,
+			boolean mostrarProductos, boolean mostrarPedidos) {
 		String output = "=================[ " + encabezado + " ]=================\n";
 
-		if (mostrarDatosPersonales) {
-			output += "- Datos Personales\n";
-			output += "\tNombre Completo: " + nombreCompleto + "\n";
-			output += "\tEmail: " + email + "\n";
-			output += "\tFecha de Nacimiento: " + dateToString(fechaNacimiento) + "\n";
-			output += "\tDNI: " + dni + "\n";
-			output += "\tTelefono: " + telefono + "\n";
-			output += "\tDisponibilidad: " + disponibilidad + "\n";
-
-			output += "\t- Movilidad\n";
-			output += "\t\tDestino: " + destino.toString() + "\n";
-			output += "\t\tTiempo: " + tiempo + " meses\n";
+		if (mostrarDatosAlmacen) {
+			output += "- Datos del Almacén\n";
+			output += "\tAlmacénID: " + almacenID + "\n";
 		}
 
-		if (mostrarEstudios) {
-			output += "- Estudios\n";
+		if (mostrarClientes) {
+			output += "- Clientes\n";
 			if (clientes.size() > 0) {
-				for (Clientes titulo : clientes) {
-					output += "\t[" + dateToString(titulo.getFechaInicio()) + " - " + dateToString(titulo.getFechaFin())
-							+ "] " + titulo.getNombre() + " en " + titulo.getEntidad() + "\n\tInformaciÃ³n Adicional: "
-							+ titulo.getDetalles() + "\n";
+				if (direcciones.size() > 0) {
+					for (Clientes cliente : clientes) {
+						for(Direccion direccion : direcciones) {
+							output += "\t[Nombre y Apellidos: " + cliente.getNombre() + " " + cliente.getApellidos()
+									+ "\n\t\tEmail: " + cliente.getEmail()
+									+ "\n\t\tTelf. de contacto: " + cliente.getTelfContacto()
+									+ "\n\t\t- Dirección"
+									+ "\n\t\t\tCalle:" + direccion.getCalle()
+									+ "\n\t\t\tNúmero:" + direccion.getNumero()
+									+ "\n\t\t\tCódigo Postal:" + direccion.getCodigoPostal()
+									+ "\n\t\t\tPoblación:" + direccion.getPoblacion()
+									+ "\n\t\t\tPaís:" + direccion.getPais() + "]\n";
+						}
+					}
 				}
-			} else {
-				output += "\tSin estudios...\n";
+				
+				else {
+					output += "\tSin direciones...\n";
+				}
+			} 
+			
+			else {
+				output += "\tSin clientes...\n";
 			}
 		}
 
-		if (mostrarExperiencia) {
-			output += "- Experiencia\n";
+		if (mostrarProductos) {
+			output += "- Productos\n";
 			if (productos.size() > 0) {
-				for (Producto experiencia : this.productos) {
-					output += "\t[" + dateToString(experiencia.getFechaInicio()) + " - "
-							+ dateToString(experiencia.getFechaFin()) + "] " + experiencia.getPuesto() + " en "
-							+ experiencia.getEmpresa() + "\n\tInformaciÃ³n Adicional: " + experiencia.getDetalles()
-							+ "\n";
+				for (Producto producto : productos) {
+					output += "\t[Codigo: " + producto.getCodigo()
+							+ "\n\t\tNombre: " + producto.getNombre()
+							+ "\n\t\tDescripción: " + producto.getDescripcion()
+							+ "\n\t\tStock: " + producto.getStock() 
+							+ "\n\t\tLocalización: " + producto.getLocalizacion()
+							+ "\n\t\tPendiente: " + producto.getPendiente() + "]\n";
 				}
 			} else {
-				output += "\tSin experiencia...\n";
+				output += "\tSin productos...\n";
 			}
 		}
 
-		if (mostrarIdiomas) {
-			output += "- Idiomas\n";
+		if (mostrarPedidos) {
+			output += "- Pedidos\n";
 			if (pedidos.size() > 0) {
-				for (Pedidos idioma : pedidos) {
-					output += "\t" + idioma.getNombre() + " nivel " + idioma.getNivel() + "\n";
+				for (Pedidos pedido : pedidos) {
+					if (productos.size() > 0) {
+						for (Producto producto : productos) {
+							if (direccionesEntrega.size() > 0) {
+								for (DireccionEntrega direccionEntrega : direccionesEntrega) {
+									output += "\t\t[- Producto"
+									+ "\n\t\t\tCodigo: " + producto.getCodigo()
+									+ "\n\t\t\tNombre: " + producto.getNombre()
+									+ "\n\t\t\tDescripción: " + producto.getDescripcion()
+									+ "\n\t\t\tStock: " + producto.getStock() 
+									+ "\n\t\t\ttLocalización: " + producto.getLocalizacion()
+									+ "\n\t\t\tPendiente: " + producto.getPendiente()
+									+ "\n\t\tCantidad: " + pedido.getCantidad()
+									+ "\n\t\t- Dirección\n"
+									+ "\n\t\t\tCalle:" + direccionEntrega.getCalle()
+									+ "\n\t\t\tNúmero:" + direccionEntrega.getNumero()
+									+ "\n\t\t\tCódigo Postal:" + direccionEntrega.getCodigoPostal()
+									+ "\n\t\t\tPoblación:" + direccionEntrega.getPoblacion()
+									+ "\n\t\t\tPaís:" + direccionEntrega.getPais()
+									+ "\n\t\tDestinatario: " + pedido.getDestinatario()
+									+ "\n\t\tFecha de entrega estimada: " + pedido.getFechaDeEntregaEstimada() + "]\n";
+								}
+							}
+							else {
+								output += "\tSin direccion de entrega...\n";
+							}
+						}
+					}
+					else {
+						output += "\tSin productos...\n";
+					}
 				}
 			} else {
-				output += "\tSin idiomas...\n";
+				output += "\tSin pedidos...\n";
 			}
 		}
 		System.out.println(output);
 	}
 
-	public String dateToString(Calendar calendar) {
-		return calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.MONTH) + "/"
-				+ calendar.get(Calendar.YEAR);
+	
+	public void printDirecciones(String encabezado) {
+		
+		String output = "=================[ " + encabezado + " ]=================\n";
+		
+		if (direcciones.size() > 0) {
+			for (Direccion direccion : direcciones) {
+				output += "\t[- Dirección"
+						+ "\n\t\t\tCalle:" + direccion.getCalle()
+						+ "\n\t\t\tNúmero:" + direccion.getNumero()
+						+ "\n\t\t\tCódigo Postal:" + direccion.getCodigoPostal()
+						+ "\n\t\t\tPoblación:" + direccion.getPoblacion()
+						+ "\n\t\t\tPaís:" + direccion.getPais() + "]\n";
+			}
+		}
+		else {
+			output += "\tSin direcciones...\n";
+		}
+		
+		System.out.println(output);
 	}
 
-	public GregorianCalendar getCalendar(String string) throws ParseException {
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = df.parse(string);
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(date);
-		return cal;
+	public void addClientes(Clientes cliente) {
+		this.clientes.add(cliente);
 	}
 
-	public void addEstudios(Clientes titulo) {
-		this.clientes.add(titulo);
-	}
-
-	public void removeEstudios(int index) {
+	public void removeClientes(int index) {
 		this.clientes.remove(index);
 	}
 
-	public void addExperiencia(Producto experiencia) {
-		this.productos.add(experiencia);
+	public void addProducto(Producto producto) {
+		this.productos.add(producto);
 	}
 
-	public void removeExperiencia(int index) {
+	public void removeProducto(int index) {
 		this.productos.remove(index);
 	}
 
-	public void addIdioma(Pedidos idioma) {
-		this.pedidos.add(idioma);
+	public void addPedidos(Pedidos pedido) {
+		this.pedidos.add(pedido);
 	}
 
-	public void removeIdioma(int index) {
+	public void removePedidos(int index) {
 		this.pedidos.remove(index);
-	}
-
-	public String getNombreCompleto() {
-		return nombreCompleto;
-	}
-
-	public void setNombreCompleto(String nombreCompleto) {
-		this.nombreCompleto = nombreCompleto;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public GregorianCalendar getFechaNacimiento() {
-		return fechaNacimiento;
-	}
-
-	public void setFechaNacimiento(GregorianCalendar fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
-
-	public String getDni() {
-		return dni;
-	}
-
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
-
-	public int getTelefono() {
-		return telefono;
-	}
-
-	public void setTelefono(int telefono) {
-		this.telefono = telefono;
-	}
-
-	public Destino getDestinoMovilidad() {
-		return destino;
-	}
-
-	public void setDestinoMovilidad(Destino destino) {
-		this.destino = destino;
-	}
-
-	public int getTiempoMovilidad() {
-		return tiempo;
-	}
-
-	public void setTiempoMovilidad(int tiempo) {
-		this.tiempo = tiempo;
-	}
-
-	public Disponibilidad getDisponibilidad() {
-		return disponibilidad;
-	}
-
-	public void setDisponibilidad(Disponibilidad disponibilidad) {
-		this.disponibilidad = disponibilidad;
 	}
 
 	public String toJSON() {		
@@ -338,18 +336,32 @@ public class Almacen {
 		return gson.toJson(this);
 	}
 
-	public ArrayList<Clientes> getEstudios() {
+	public String getAlmacenID() {
+		return almacenID;
+	}
+
+	public void setAlmacenID(String almacenID) {
+		this.almacenID = almacenID;
+	}
+
+	public ArrayList<Clientes> getClientes() {
 		return clientes;
 	}
 
-	public ArrayList<Producto> getExperiencia() {
+	public ArrayList<Producto> getProductos() {
 		return productos;
 	}
 
-	public ArrayList<Pedidos> getIdiomas() {
+	public ArrayList<Pedidos> getPedidos() {
 		return pedidos;
 	}
 	
-	
+	public ArrayList<Direccion> getDirecciones() {
+		return direcciones;
+	}
+
+	public ArrayList<DireccionEntrega> getDireccionesEntrega() {
+		return direccionesEntrega;
+	}
 
 }

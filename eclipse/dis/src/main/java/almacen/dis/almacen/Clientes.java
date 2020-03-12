@@ -1,36 +1,22 @@
 package almacen.dis.almacen;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-
 import almacen.dis.almacen.direccionEntrega.Direccion;
 
 public class Clientes {
 	
 	private String nombre;
 	private String apellidos;
-	private String entidad;
-	private GregorianCalendar fechaInicio;
-	private GregorianCalendar fechaFin;
-	private String detalles;
+	private String email;
+	private String telfContacto;
 	private ArrayList<Direccion> direccion;
 	
-	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, ArrayList<Direccion> direccion) { 
+	public Clientes(String nombre, String apellidos, String email, String telfContacto, ArrayList<Direccion> direccion) { 
 		this.nombre = nombre;
-		this.entidad = entidad;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
+		this.apellidos = apellidos;
+		this.email = email;
+		this.telfContacto =telfContacto;
 		this.setDireccion(new ArrayList<Direccion>());
-		this.detalles = "";
-	}
-	
-	public Clientes(String nombre, String entidad, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, ArrayList<Direccion> direccion, String detalles) { 
-		this.nombre = nombre;
-		this.entidad = entidad;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.setDireccion(new ArrayList<Direccion>());
-		this.detalles = detalles;
 	}
 
 	public String getNombre() {
@@ -41,36 +27,28 @@ public class Clientes {
 		this.nombre = nombre;
 	}
 
-	public GregorianCalendar getFechaInicio() {
-		return fechaInicio;
+	public String getApellidos() {
+		return apellidos;
 	}
 
-	public void setFechaInicio(GregorianCalendar fechaInicio) {
-		this.fechaInicio = fechaInicio;
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
 	}
 
-	public GregorianCalendar getFechaFin() {
-		return fechaFin;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setFechaFin(GregorianCalendar fechaFin) {
-		this.fechaFin = fechaFin;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public String getDetalles() {
-		return detalles;
+	public String getTelfContacto() {
+		return telfContacto;
 	}
 
-	public void setDetalles(String detalles) {
-		this.detalles = detalles;
-	}
-
-	public String getEntidad() {
-		return entidad;
-	}
-
-	public void setEntidad(String entidad) {
-		this.entidad = entidad;
+	public void setTelfContacto(String telfContacto) {
+		this.telfContacto = telfContacto;
 	}
 
 	public ArrayList<Direccion> getDireccion() {

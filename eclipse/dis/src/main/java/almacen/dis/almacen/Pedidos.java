@@ -6,50 +6,34 @@ import almacen.dis.almacen.direccionEntrega.DireccionEntrega;
 
 public class Pedidos {
 
-	private String productos;
+	private ArrayList<Producto> productos;
 	private int cantidad;
+	private ArrayList<DireccionEntrega> direccionEntrega;
 	private String destinatario;
 	private String fechaDeEntregaEstimada;
-	private ArrayList<DireccionEntrega> direccionEntrega;
 
-	public Pedidos(String productos, int cantidad, String destinatario, String fechaDeEntregaEstimada, ArrayList<DireccionEntrega> direccionEntrega) {
-		this.productos = productos;
+	public Pedidos(ArrayList<Producto> productos, int cantidad, ArrayList<DireccionEntrega> direccionEntrega, String destinatario, String fechaDeEntregaEstimada){
+		this.setProductos(new ArrayList<Producto>());
 		this.cantidad = cantidad;
 		this.destinatario = destinatario;
 		this.fechaDeEntregaEstimada = fechaDeEntregaEstimada;
 		this.setDireccionEntrega(new ArrayList<DireccionEntrega>());
 	}
 
-	public String getproductos() {
+	public ArrayList<Producto> getProductos() {
 		return productos;
 	}
 
-	public void setproductos(String productos) {
+	public void setProductos(ArrayList<Producto> productos) {
 		this.productos = productos;
 	}
 
-	public int getcantidad() {
+	public int getCantidad() {
 		return cantidad;
 	}
 
-	public void setcantidad(int cantidad) {
+	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
-	}
-
-	public String getdestinatario() {
-		return destinatario;
-	}
-
-	public void setdestinatario(String destinatario) {
-		this.destinatario = destinatario;
-	}
-	
-	public String getfechaDeEntregaEstimada() {
-		return fechaDeEntregaEstimada;
-	}
-
-	public void setfechaDeEntregaEstimada(String fechaDeEntregaEstimada) {
-		this.fechaDeEntregaEstimada = fechaDeEntregaEstimada;
 	}
 
 	public ArrayList<DireccionEntrega> getDireccionEntrega() {
@@ -58,5 +42,21 @@ public class Pedidos {
 
 	public void setDireccionEntrega(ArrayList<DireccionEntrega> direccionEntrega) {
 		this.direccionEntrega = direccionEntrega;
+	}
+
+	public String getDestinatario() {
+		return destinatario;
+	}
+
+	public void setDestinatario(String destinatario) {
+		this.destinatario = destinatario;
+	}
+
+	public String getFechaDeEntregaEstimada() {
+		return fechaDeEntregaEstimada;
+	}
+
+	public void setFechaDeEntregaEstimada(String fechaDeEntregaEstimada) {
+		this.fechaDeEntregaEstimada = fechaDeEntregaEstimada;
 	}
 }

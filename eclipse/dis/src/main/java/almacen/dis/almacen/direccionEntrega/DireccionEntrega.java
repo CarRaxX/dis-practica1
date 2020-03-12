@@ -16,43 +16,43 @@ public class DireccionEntrega {
 		this.pais = pais;
 	}
 
-	public String getcalle() {
+	public String getCalle() {
 		return calle;
 	}
 
-	public void setcalle(String calle) {
+	public void setCalle(String calle) {
 		this.calle = calle;
 	}
 
-	public int getnumero() {
+	public int getNumero() {
 		return numero;
 	}
 
-	public void setnumero(int numero) {
+	public void setNumero(int numero) {
 		this.numero = numero;
 	}
 
-	public int getcodigoPostal() {
+	public int getCodigoPostal() {
 		return codigoPostal;
 	}
 
-	public void setcodigoPostal(int codigoPostal) {
+	public void setCodigoPostal(int codigoPostal) {
 		this.codigoPostal = codigoPostal;
 	}
-	
-	public String getpoblacion() {
+
+	public String getPoblacion() {
 		return poblacion;
 	}
 
-	public void setpoblacion(String poblacion) {
+	public void setPoblacion(String poblacion) {
 		this.poblacion = poblacion;
 	}
-	
-	public String getpais() {
+
+	public String getPais() {
 		return pais;
 	}
 
-	public void setpais(String pais) {
+	public void setPais(String pais) {
 		this.pais = pais;
 	}
 	

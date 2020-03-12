@@ -1,21 +1,21 @@
 package almacen.dis.almacen.direccionEntrega;
 
 public class Direccion {
-	
+
 	private String calle;
 	private int numero;
 	private int codigoPostal;
-	private String población;
+	private String poblacion;
 	private String pais;
 
-	public Direccion(String calle, int numero, int codigoPostal, String población, String pais) {
+	public Direccion(String calle, int numero, int codigoPostal, String poblacion, String pais) {
 		this.calle = calle;
 		this.numero = numero;
 		this.codigoPostal = codigoPostal;
-		this.población = población;
+		this.poblacion = poblacion;
 		this.pais = pais;
 	}
-
+	
 	public String getCalle() {
 		return calle;
 	}
@@ -40,12 +40,12 @@ public class Direccion {
 		this.codigoPostal = codigoPostal;
 	}
 
-	public String getPoblación() {
-		return población;
+	public String getPoblacion() {
+		return poblacion;
 	}
 
-	public void setPoblación(String población) {
-		this.población = población;
+	public void setPoblacion(String poblacion) {
+		this.poblacion = poblacion;
 	}
 
 	public String getPais() {
