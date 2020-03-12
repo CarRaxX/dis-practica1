@@ -8,6 +8,7 @@ import almacen.dis.almacen.direccionEntrega.Direccion;
 public class Clientes {
 	
 	private String nombre;
+	private String apellidos;
 	private String entidad;
 	private GregorianCalendar fechaInicio;
 	private GregorianCalendar fechaFin;

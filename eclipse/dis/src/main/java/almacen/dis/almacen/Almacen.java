@@ -61,6 +61,7 @@ public class Almacen {
 			Element node2 = new Element("Clientes");
 			for (Clientes cliente : clientes) {
 				Element node21 = new Element("Cliente");
+				node21.addContent(new Element("Nombre").setText(cliente.getNombre()));
 				node21.addContent(new Element("Apellidos").setText(cliente.getNombre()));
 				node21.addContent(new Element("Email").setText(cliente.getEntidad()));
 				node21.addContent(new Element("Telf. Contacto").setText(dateToString(cliente.getFechaInicio())));
