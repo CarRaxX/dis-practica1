@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 import almacen.dis.almacen.Almacen;
 import almacen.dis.almacen.Producto;
 import almacen.dis.almacen.Producto.Localizacion;
+import almacen.dis.almacen.direccionEntrega.Direccion;
+import almacen.dis.almacen.direccionEntrega.DireccionEntrega;
 import almacen.dis.almacen.Pedidos;
 import almacen.dis.almacen.Clientes;
 
@@ -21,27 +23,26 @@ public class App {
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Sistema de Gestión de Almacenes");
-
-		System.out.print("Ruta del archivo xml: ");
+		printHelp();
+		System.out.print("Rutay nombre del archivo xml: ");
 		filePath = input.next();
 		Almacen almacen = new Almacen(filePath);
-		
-		printHelp();
 
 		boolean run = true;
 		while (run) {
 			String inputStr = input.nextLine();
 
-			// Convertir la entrada a comando + argumentos (soporta strings espaciados usando dobles comillas "TEXTO ESPACIADO")
+			// Convertir la entrada a comando + argumentos (soporta strings espaciados
+			// usando dobles comillas "TEXTO ESPACIADO")
 			String command = "";
 			List<String> arguments = new ArrayList<String>();
 			Matcher match = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(inputStr);
-			
-			while(match.find()) {
+
+			while (match.find()) {
 				String str = match.group(1);
 				str = str.replace("\"", "");
-				
-				if(command.isEmpty()) {
+
+				if (command.isEmpty()) {
 					command = str;
 				} else {
 					arguments.add(str);
@@ -56,6 +57,17 @@ public class App {
 			// Comando para pasar a JSON
 			if (command.equalsIgnoreCase("json")) {
 				System.out.println(almacen.toJSON());
+			}
+
+			// Comando para cargar archivo
+			if (command.equalsIgnoreCase("load")) {
+				if (arguments.size() > 0) {
+					almacen.loadFile(arguments.get(0));
+					System.out.println("Archivo cargado desde " + arguments.get(0));
+				} else {
+					almacen.loadFile(filePath);
+					System.out.println("Archivo cargado desde " + filePath);
+				}
 			}
 
 			// Comando para guardar archivo
@@ -77,206 +89,157 @@ public class App {
 						almacen.printAlmacen("ALMACEN", true, true, true, true);
 					}
 					// Mostrar ALMACÉN
-					if (arguments.get(0).equalsIgnoreCase("clientes")) {
+					if (arguments.get(0).equalsIgnoreCase("almacen")) {
 						if (arguments.size() == 1) {
 							almacen.printAlmacen("ALMACEN", true, false, false, false);
 						} else {
-							System.out.println("display <all|almacen|clientes|productos|pedidos>");
+							System.out.println("Introduza:\n display <all|almacen|clientes|productos|pedidos>");
 						}
 					}
 					// Mostrar CLIENTES
-					if (arguments.get(0).equalsIgnoreCase("estudios")) {
+					if (arguments.get(0).equalsIgnoreCase("clientes")) {
 						if (arguments.size() == 1) {
 							almacen.printAlmacen("ALMACEN", false, true, false, false);
 						} else {
-							System.out.println("display <all|almacen|clientes|productos|pedidos>");
+							System.out.println("Introduza:\n display <all|almacen|clientes|productos|pedidos>");
 						}
 					}
 					// Mostrar PRODUCTOS
-					if (arguments.get(0).equalsIgnoreCase("experiencia")) {
+					if (arguments.get(0).equalsIgnoreCase("productos")) {
 						if (arguments.size() == 1) {
 							almacen.printAlmacen("ALMACEN", false, false, true, false);
 						} else {
-							System.out.println("display <all|almacen|clientes|productos|pedidos>");
+							System.out.println("Introduza:\n display <all|almacen|clientes|productos|pedidos>");
 						}
 					}
 					// Mostrar PEDIDOS
-					if (arguments.get(0).equalsIgnoreCase("idiomas")) {
+					if (arguments.get(0).equalsIgnoreCase("pedidos")) {
 						if (arguments.size() == 1) {
 							almacen.printAlmacen("ALMACEN", false, false, false, true);
 						} else {
-							System.out.println("display <all|almacen|clientes|productos|pedidos>");
+							System.out.println("Introduza:\n display <all|almacen|clientes|productos|pedidos>");
 						}
 					}
 				} else {
-					System.out.println("display <all|almacen|clientes|productos|pedidos>");
+					System.out.println("Introduza:\n display <all|almacen|clientes|productos|pedidos>");
 				}
 			}
 
 			// Comando para Añadir
 			if (command.equalsIgnoreCase("add")) {
 				if (arguments.size() > 0) {
-					// Añadiendo pedidos
+					// Añadiendo pedidos con un productos a una dirección de entrega.
 					if (arguments.get(0).equalsIgnoreCase("pedido")) {
-						if (arguments.size() == 3) {
-							if("BASICO|MEDIO|FLUIDO|NATIVO".contains(arguments.get(2))) {
-								almacen.addPedidos(new Pedidos(arguments.get(1), Nivel.valueOf(arguments.get(2))));
-								System.out.println("AÃ±adido correctamente!");
+						if (almacen.getProductos().size() > 0) {
+							if (arguments.size() == 11) {
+								almacen.addPedidos(new Pedidos(arguments.get(1), null, Integer.parseInt(arguments.get(3)), null, arguments.get(9), arguments.get(10)));
+								for (int i = 0; i < almacen.getPedidos().size(); i++) {
+									// Añadimos la direccion de entrega
+									almacen.getPedidos().get(i).getDireccionEntrega().add(new DireccionEntrega(arguments.get(4),Integer.parseInt(arguments.get(5)),Integer.parseInt(arguments.get(6)), arguments.get(7),arguments.get(8)));
+									for (int j = 0; j < almacen.getProductos().size(); j++) {
+										if (arguments.get(2).equals(almacen.getProductos().get(j).getCodigo())) {
+											// Añadimos el producto seleccionado
+											almacen.getPedidos().get(i).getProductos().add(almacen.getProductos().get(j));	
+										} else {
+											System.out.println("Error. código del producto no encontrado!");
+										}
+									}
+								}
+								System.out.println("Pedido añadido correctamente!");
 							} else {
-								System.out.println("Nivel de idioma no válido!");
+								System.out.println(
+										"Introduza:\n add pedido <idPedido> <codigo del producto (str)> <cantidad> <calle (str)> <numero (int)> <codigo postal (int)> <poblacion (str)> <pais (str)> <destinatario> <fecha de entrega estimada>");
 							}
 						} else {
-							System.out.println("add idioma <nombre> <BASICO|MEDIO|FLUIDO|NATIVO>");
+							System.out.println(
+									"No hay productos!\n Introduza:\n add producto <codigo (str)> <nombre (str)> <descripcion (str)> <stock (int)> <PASILLO|ESTANTERIA|ESTANTE> <true|false>");
 						}
 					}
+
+					// Añadiendo más productos a un pedido
+					if (arguments.get(0).equalsIgnoreCase("productos")) {
+						if (arguments.size() == 3) {
+							if (almacen.getPedidos().size() > 0) {
+								for (int i = 0; i < almacen.getProductos().size(); i++) {
+									if (arguments.get(1).equals(almacen.getProductos().get(i).getCodigo())) {
+										for (int j = 0; i < almacen.getPedidos().size(); i++) {
+											if (arguments.get(2).equals(almacen.getPedidos().get(j).getIdPedido())) {
+												almacen.getPedidos().get(j).getProductos()
+														.add(almacen.getProductos().get(i));
+												System.out.println("Producto con código ["
+														+ almacen.getProductos().get(i).getCodigo()
+														+ "] añadido al pedido con id ["
+														+ almacen.getPedidos().get(j).getIdPedido() + "]!");
+											} else {
+												System.out.println("Id del pedido no encontrado");
+											}
+										}
+									} else {
+										System.out.println("Código de producto no encontrado");
+									}
+								}
+							} else {
+								System.out.println(
+										"No hay pedidos!\n Introduza:\n add pedido <id del pedido> <codigo del producto (str)> <cantidad> <calle (str)> <numero (int)> <codigo postal (int)> <poblacion (str)> <pais (str)> <destinatario> <fecha de entrega estimada>");
+							}
+						} else {
+							System.out.println("Introduza:\n add productos <codigo producto (str)> <id pedido (str)>");
+						}
+					}
+
 					// Añadiendo producto
 					if (arguments.get(0).equalsIgnoreCase("producto")) {
 						if (arguments.size() == 7) {
-							if("PASILLO|ESTANTERIA|ESTANTE".contains(arguments.get(5))) {
-								almacen.addProducto(new Producto(arguments.get(1), arguments.get(2), arguments.get(3), Integer.parseInt(arguments.get(4)), Localizacion.valueOf(arguments.get(5)), Boolean.parseBoolean(arguments.get(6))));
+							if ("PASILLO|ESTANTERIA|ESTANTE".contains(arguments.get(5))) {
+								almacen.addProducto(new Producto(arguments.get(1), arguments.get(2), arguments.get(3),
+										Integer.parseInt(arguments.get(4)), Localizacion.valueOf(arguments.get(5)),
+										Boolean.parseBoolean(arguments.get(6))));
 								System.out.println("Producto añadido correctamente!");
-							}							
-							else {
+							} else {
 								System.out.println("Localización del producto no válida!");
-							}		
+							}
 						} else {
-							System.out.println("add producto <codigo (str)> <nombre (str)> <descripcion (str)> <stock (int)> <PASILLO|ESTANTERIA|ESTANTE> <true|false>");
+							System.out.println(
+									"Introduza:\n add producto <codigo (str)> <nombre (str)> <descripcion (str)> <stock (int)> <PASILLO|ESTANTERIA|ESTANTE> <true|false>");
 						}
 					}
 					// Añadiendo cliente
 					if (arguments.get(0).equalsIgnoreCase("cliente")) {
-						if(almacen.getDirecciones().size() > 0) {
-							if (arguments.size() == 6) {
-								almacen.addClientes(new Clientes(arguments.get(1), arguments.get(2), null, null, null));
-								System.out.println("Cliente añadido correctamente!");
+						if (arguments.size() == 5) {
+							almacen.addClientes(new Clientes(arguments.get(1), arguments.get(2), arguments.get(3),
+									arguments.get(4), null));
+							System.out.println("Cliente añadido correctamente!");
+						} else {
+							System.out.println(
+									"Introduza:\n add cliente <nombre (str)> <apellido (str)> <email (str)> <telf. contacto (str)>");
+						}
+					}
+					// Añadiendo dirección a un cliente
+					if (arguments.get(0).equalsIgnoreCase("direccion")) {
+						if (arguments.size() == 7) {
+							if (almacen.getClientes().size() > 0) {
+								for (int i = 0; i < almacen.getClientes().size(); i++) {
+									if (arguments.get(1).equals(almacen.getClientes().get(i).getNombre())) {
+										almacen.getClientes().get(i).getDireccion()
+												.add(new Direccion(arguments.get(2), Integer.parseInt(arguments.get(3)),
+														Integer.parseInt(arguments.get(4)), arguments.get(5),
+														arguments.get(6)));
+										System.out.println("Dirección para el cliente con nombre ["
+												+ almacen.getClientes().get(i).getNombre()
+												+ "] añadida correctamente!");
+									} else {
+										System.out.println("Nombre de cliente no encontrado");
+									}
+								}
 							} else {
-								System.out.println("add cliente <nombre (str)> <apellido 1 (str)> <apellido 2 (str)> <email (str)> <telf. contacto (str)> <DIRECCION>");
-							}
-						}
-						else {
-							System.out.println("add direccion <calle (str)> <numero (int)> <codigo postal (int)> <poblacion (str)> <pais (str)>");
-						}
-					}
-				} else {
-					System.out.println("add <producto|cliente|pedido> CONTENIDO");
-				}
-			}
-
-			// Comando para modificar
-			if (command.equalsIgnoreCase("mod")) {
-				if (arguments.size() > 0) {
-					// Modificar nombre
-					if (arguments.get(0).equalsIgnoreCase("nombre")) {
-						if (arguments.size() == 2) {
-							almacen.setNombreCompleto(arguments.get(1));
-							System.out.println("Modificado correctamente!");
-						} else {
-							System.out.println("mod <nombre> VALOR");
-						}
-					}
-					// Modificar telefono
-					if (arguments.get(0).equalsIgnoreCase("telefono")) {
-						if (arguments.size() == 2) {
-							almacen.setTelefono(Integer.parseInt(arguments.get(1)));
-							System.out.println("Modificado correctamente!");
-						} else {
-							System.out.println("mod <telefono> VALOR");
-						}
-					}
-					// Modificar email
-					if (arguments.get(0).equalsIgnoreCase("email")) {
-						if (arguments.size() == 2) {
-							almacen.setEmail(arguments.get(1));
-							System.out.println("Modificado correctamente!");
-						} else {
-							System.out.println("mod <email> VALOR");
-						}
-					}
-					// Modificar disponibilidad
-					if (arguments.get(0).equalsIgnoreCase("disponibilidad")) {
-						if (arguments.size() == 2) {
-							if("BAJA|MEDIA|ALTA".contains(arguments.get(1))) {
-								almacen.setDisponibilidad(Disponibilidad.valueOf(arguments.get(1)));
-								System.out.println("Modificado correctamente!");
-							} else {
-								System.out.println("Disponibilidad no vÃ¡lida!");
+								System.out.println(
+										"No hay clientes!\n Introduza:\n add cliente <nombre (str)> <apellido (str)> <email (str)> <telf. contacto (str)>");
 							}
 						} else {
-							System.out.println("mod <disponibilidad> <BAJA|MEDIA|ALTA>");
+							System.out.println(
+									"Introduza:\n add direccion <nombre cliente (str)> <calle (str)> <numero (int)> <codigo postal (int)> <poblacion (str)> <pais (str)>");
 						}
 					}
-					// Modificar disponibilidad
-					if (arguments.get(0).equalsIgnoreCase("destino")) {
-						if (arguments.size() == 2) {
-							
-							if("NACIONAL|EUROPA|ASIA|AMERICA_NORTE|AMERICA_SUR|OTROS".contains(arguments.get(1))) {
-								almacen.setDestinoMovilidad(Destino.valueOf(arguments.get(1)));
-								System.out.println("Modificado correctamente!");
-							} else {
-								System.out.println("Destino de movilidad no vÃ¡lido!");
-							}
-						} else {
-							System.out.println("mod <destino> <NACIONAL|EUROPA|ASIA|AMERICA_NORTE|AMERICA_SUR|OTROS>");
-						}
-					}
-					// Modificar disponibilidad
-					if (arguments.get(0).equalsIgnoreCase("tiempo")) {
-						if (arguments.size() == 2) {
-							almacen.setTiempoMovilidad(Integer.parseInt(arguments.get(1)));
-							System.out.println("Modificado correctamente!");
-						} else {
-							System.out.println("mod <tiempo> <meses>");
-						}
-					}
-				} else {
-					System.out.println("mod <nombre|telefono|email|disponibilidad> VALOR");
-				}
-			}
-
-			// Comando para eliminar
-			if (command.equalsIgnoreCase("remove")) {
-				if (arguments.size() > 0) {
-					// Eliminar idioma
-					if (arguments.get(0).equalsIgnoreCase("idioma")) {
-						if (arguments.size() == 2) {
-							almacen.removeIdioma(Integer.parseInt(arguments.get(1)));
-						} else {
-							System.out.println("IDs de Idiomas:");
-							for (int i = 0; i < almacen.getIdiomas().size(); i++) {
-								System.out.println(i + " - " + almacen.getIdiomas().get(i).getNombre());
-								System.out.println("Eliminado correctamente!");
-							}
-							System.out.println("remove idioma <id>");
-						}
-					}
-					// Eliminar experiencia
-					if (arguments.get(0).equalsIgnoreCase("experiencia")) {
-						if (arguments.size() == 2) {
-							almacen.removeExperiencia(Integer.parseInt(arguments.get(1)));
-						} else {
-							System.out.println("IDs de Experiencias:");
-							for (int i = 0; i < almacen.getExperiencia().size(); i++) {
-								System.out.println(i + " - " + almacen.getExperiencia().get(i).getEmpresa());
-								System.out.println("Eliminado correctamente!");
-							}
-							System.out.println("remove experiencia <id>");
-						}
-					}
-					// Eliminar titulo
-					if (arguments.get(0).equalsIgnoreCase("titulo")) {
-						if (arguments.size() == 2) {
-							almacen.removeEstudios(Integer.parseInt(arguments.get(1)));
-							System.out.println("Eliminado correctamente!");
-						} else {
-							System.out.println("IDs de Titulos:");
-							for (int i = 0; i < almacen.getEstudios().size(); i++) {
-								System.out.println(i + " - " + almacen.getEstudios().get(i).getNombre());
-							}
-							System.out.println("remove titulo <id>");
-						}
-					}
-				} else {
-					System.out.println("remove <titulo|experiencia|idioma> ID");
 				}
 			}
 
@@ -285,22 +248,20 @@ public class App {
 				System.out.println("Consola cerrada correctamente.");
 				run = false;
 			}
-			System.out.print("cview > ");
+			System.out.print("almacen > ");
 		}
 		input.close();
 	}
 
 	public static void printHelp() {
 		String output = "=========| AYUDA |=========\n";
-		output += "help\n";
-		output += "json\n";
-		output += "display <all|datos|estudios|experiencia|idiomas>\n";
-		output += "save [ARCHIVO: en blanco utiliza el archivo de carga]\n";
-		output += "mod <nombre|telefono|email|disponibilidad|destino|tiempo> VALOR\n";
-		output += "add <titulo|experiencia|idioma> CONTENIDO\n";
-		output += "remove <titulo|experiencia|idioma> ID\n";
+		output += "help - Lista de comandos\n";
+		output += "add <producto|cliente|direccion|pedido|productos> CONTENIDO\n";
+		output += "display <all|almacen|clientes|productos|pedidos>\n";
+		output += "json - Crear archivo json\n";
+		output += "load <path> - Carga el documento XML desde la ruta especificada\n";
+		output += "save <path> - Guarda el documento XML en la ruta especificada\n";
 		output += "exit\n";
 		System.out.println(output);
 	}
-
 }

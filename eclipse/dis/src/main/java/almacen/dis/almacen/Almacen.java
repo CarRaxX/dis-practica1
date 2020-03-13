@@ -23,8 +23,6 @@ public class Almacen {
 	private ArrayList<Clientes> clientes;
 	private ArrayList<Producto> productos;
 	private ArrayList<Pedidos> pedidos;
-	private ArrayList<Direccion> direcciones;
-	private ArrayList<DireccionEntrega> direccionesEntrega;
 
 	public Almacen() {
 		this.clientes = new ArrayList<Clientes>();
@@ -64,13 +62,13 @@ public class Almacen {
 				node21.addContent(new Element("Nombre").setText(cliente.getNombre()));
 				node21.addContent(new Element("Apellidos").setText(cliente.getApellidos()));
 				node21.addContent(new Element("Email").setText(cliente.getEmail()));
-				node21.addContent(new Element("Telf. Contacto").setText(cliente.getTelfContacto()));
+				node21.addContent(new Element("Telf.Contacto").setText(cliente.getTelfContacto()));
 
 				for (Direccion direccion : cliente.getDireccion()) {
 					Element node211 = new Element("Direccion");
 					node211.addContent(new Element("Calle").setText(direccion.getCalle()));
 					node211.addContent(new Element("Número").setText(Integer.toString(direccion.getNumero())));
-					node211.addContent(new Element("Código Postal").setText(Integer.toString(direccion.getCodigoPostal())));
+					node211.addContent(new Element("CódigoPostal").setText(Integer.toString(direccion.getCodigoPostal())));
 					node211.addContent(new Element("Población").setText(direccion.getPoblacion()));
 					node211.addContent(new Element("País").setText(direccion.getPais()));
 					
@@ -98,6 +96,7 @@ public class Almacen {
 			Element node4 = new Element("Pedidos");
 			for (Pedidos pedido : pedidos) {
 				Element node41 = new Element("Pedido");
+				node41.addContent(new Element("IDPedido").setText(pedido.getIdPedido()));
 				
 				for (Producto producto : productos) {
 					Element node411 = new Element("Producto");
@@ -113,10 +112,10 @@ public class Almacen {
 				node41.addContent(new Element("Cantidad").setText(Integer.toString(pedido.getCantidad())));
 				
 				for (DireccionEntrega direccionEntrega : pedido.getDireccionEntrega()) {
-					Element node421 = new Element("Direccion de entrega");
+					Element node421 = new Element("DireccionDeEntrega");
 					node421.addContent(new Element("Calle").setText(direccionEntrega.getCalle()));
 					node421.addContent(new Element("Número").setText(Integer.toString(direccionEntrega.getNumero())));
-					node421.addContent(new Element("Código Postal").setText(Integer.toString(direccionEntrega.getCodigoPostal())));
+					node421.addContent(new Element("CódigoPostal").setText(Integer.toString(direccionEntrega.getCodigoPostal())));
 					node421.addContent(new Element("Población").setText(direccionEntrega.getPoblacion()));
 					node421.addContent(new Element("País").setText(direccionEntrega.getPais()));
 					
@@ -124,7 +123,7 @@ public class Almacen {
 				}
 				
 				node41.addContent(new Element("Destinatario").setText(pedido.getDestinatario()));
-				node41.addContent(new Element("Fecha de entrega estimada").setText(pedido.getFechaDeEntregaEstimada()));
+				node41.addContent(new Element("FechaDeEntregaEstimada").setText(pedido.getFechaDeEntregaEstimada()));
 				
 				
 				node4.addContent(node41);
@@ -161,8 +160,10 @@ public class Almacen {
 			Element node2 = rootNode.getChild("Clientes");
 			for (Element node21 : node2.getChildren("Cliente")) {
 				for (Element node211 : node21.getChildren("Direccion")) {
-					direcciones.add(new Direccion(node211.getChildText("Calle"), Integer.parseInt(node211.getChildText("Numero")), Integer.parseInt(node211.getChildText("Código Postal")), node211.getChildText("Población"), node211.getChildText("País")));
-					clientes.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Apellidos"), node21.getChildText("Email"), node21.getChildText("Telf. Contacto"), direcciones));	
+					for (int i = 0; i < clientes.size(); i++) {
+						clientes.add(new Clientes(node21.getChildText("Nombre"), node21.getChildText("Apellidos"), node21.getChildText("Email"), node21.getChildText("Telf.Contacto"), null));
+						clientes.get(i).getDireccion().add(new Direccion(node211.getChildText("Calle"), Integer.parseInt(node211.getChildText("Numero")), Integer.parseInt(node211.getChildText("CódigoPostal")), node211.getChildText("Población"), node211.getChildText("País")));
+					}	
 				}
 			}
 
@@ -174,10 +175,12 @@ public class Almacen {
 			Element node4 = rootNode.getChild("Pedidos");
 			for (Element node41 : node4.getChildren("Pedido")) {
 				for (Element node411 : node4.getChildren("Producto")) {
-					for (Element node421 : node4.getChildren("Direccion de entrega")) {
-						productos.add(new Producto(node411.getChildText("Código"), node411.getChildText("Nombre"), node411.getChildText("Descripción"), Integer.parseInt(node411.getChildText("Stock")), Localizacion.valueOf(node411.getChildText("Localización")), Boolean.parseBoolean(node411.getChildText("Pendientes"))));
-						direccionesEntrega.add(new DireccionEntrega(node421.getChildText("Calle"), Integer.parseInt(node421.getChildText("Numero")), Integer.parseInt(node421.getChildText("Código Postal")), node421.getChildText("Población"), node421.getChildText("País")));
-						pedidos.add(new Pedidos(productos, Integer.parseInt(node41.getChildText("Cantidad")), direccionesEntrega, node41.getChildText("Destinatario"), node41.getChildText("Fecha de entrega estimada")));
+					for (Element node421 : node4.getChildren("DireccionDeEntrega")) {
+						for (int i = 0; i < pedidos.size(); i++) {
+							pedidos.get(i).getProductos().add(new Producto(node411.getChildText("Código"), node411.getChildText("Nombre"), node411.getChildText("Descripción"), Integer.parseInt(node411.getChildText("Stock")), Localizacion.valueOf(node411.getChildText("Localización")), Boolean.parseBoolean(node411.getChildText("Pendientes"))));
+							pedidos.get(i).getDireccionEntrega().add(new DireccionEntrega(node421.getChildText("Calle"), Integer.parseInt(node421.getChildText("Numero")), Integer.parseInt(node421.getChildText("CódigoPostal")), node421.getChildText("Población"), node421.getChildText("País")));
+							pedidos.add(new Pedidos(node41.getChildText("IDPedido"), null, Integer.parseInt(node41.getChildText("Cantidad")), null, node41.getChildText("Destinatario"), node41.getChildText("FechaDeEntregaEstimada")));
+						}
 					}
 				}
 			}
@@ -199,44 +202,43 @@ public class Almacen {
 		}
 
 		if (mostrarClientes) {
-			output += "- Clientes\n";
+			output += "\n- Clientes\n";
 			if (clientes.size() > 0) {
-				if (direcciones.size() > 0) {
-					for (Clientes cliente : clientes) {
-						for(Direccion direccion : direcciones) {
-							output += "\t[Nombre y Apellidos: " + cliente.getNombre() + " " + cliente.getApellidos()
-									+ "\n\t\tEmail: " + cliente.getEmail()
-									+ "\n\t\tTelf. de contacto: " + cliente.getTelfContacto()
-									+ "\n\t\t- Dirección"
-									+ "\n\t\t\tCalle:" + direccion.getCalle()
-									+ "\n\t\t\tNúmero:" + direccion.getNumero()
-									+ "\n\t\t\tCódigo Postal:" + direccion.getCodigoPostal()
-									+ "\n\t\t\tPoblación:" + direccion.getPoblacion()
-									+ "\n\t\t\tPaís:" + direccion.getPais() + "]\n";
+				for (Clientes cliente : clientes) {
+					output += "\t[Nombre y Apellidos: " + cliente.getNombre() + " " + cliente.getApellidos()
+					+ "\n\tEmail: " + cliente.getEmail()
+					+ "\n\tTelf. de contacto: " + cliente.getTelfContacto() 
+					+ "\n\t- Dirección";
+					
+					for (int i = 0; i < cliente.getDireccion().size(); i++) {
+						if(clientes.get(i).getDireccion().size() > 0) {
+							output += "\n\t\tCalle: " + cliente.getDireccion().get(i).getCalle()
+									+ "\n\t\tNúmero: " + cliente.getDireccion().get(i).getNumero()
+									+ "\n\t\tCódigo Postal: " + cliente.getDireccion().get(i).getCodigoPostal()
+									+ "\n\t\tPoblación: " + cliente.getDireccion().get(i).getPoblacion()
+									+ "\n\t\tPaís: " + cliente.getDireccion().get(i).getPais() + "]\n";	
+						}
+						else {
+							output += "\tSin Direcciones...\n";
 						}
 					}
 				}
-				
-				else {
-					output += "\tSin direciones...\n";
-				}
 			} 
-			
 			else {
 				output += "\tSin clientes...\n";
 			}
 		}
 
 		if (mostrarProductos) {
-			output += "- Productos\n";
+			output += "\n- Productos\n";
 			if (productos.size() > 0) {
 				for (Producto producto : productos) {
 					output += "\t[Codigo: " + producto.getCodigo()
-							+ "\n\t\tNombre: " + producto.getNombre()
-							+ "\n\t\tDescripción: " + producto.getDescripcion()
-							+ "\n\t\tStock: " + producto.getStock() 
-							+ "\n\t\tLocalización: " + producto.getLocalizacion()
-							+ "\n\t\tPendiente: " + producto.getPendiente() + "]\n";
+							+ "\n\tNombre: " + producto.getNombre()
+							+ "\n\tDescripción: " + producto.getDescripcion()
+							+ "\n\tStock: " + producto.getStock() 
+							+ "\n\tLocalización: " + producto.getLocalizacion()
+							+ "\n\tPendiente: " + producto.getPendiente() + "]\n";
 				}
 			} else {
 				output += "\tSin productos...\n";
@@ -244,38 +246,42 @@ public class Almacen {
 		}
 
 		if (mostrarPedidos) {
-			output += "- Pedidos\n";
+			output += "\n- Pedidos\n";
 			if (pedidos.size() > 0) {
 				for (Pedidos pedido : pedidos) {
-					if (productos.size() > 0) {
-						for (Producto producto : productos) {
-							if (direccionesEntrega.size() > 0) {
-								for (DireccionEntrega direccionEntrega : direccionesEntrega) {
-									output += "\t\t[- Producto"
-									+ "\n\t\t\tCodigo: " + producto.getCodigo()
-									+ "\n\t\t\tNombre: " + producto.getNombre()
-									+ "\n\t\t\tDescripción: " + producto.getDescripcion()
-									+ "\n\t\t\tStock: " + producto.getStock() 
-									+ "\n\t\t\ttLocalización: " + producto.getLocalizacion()
-									+ "\n\t\t\tPendiente: " + producto.getPendiente()
-									+ "\n\t\tCantidad: " + pedido.getCantidad()
-									+ "\n\t\t- Dirección\n"
-									+ "\n\t\t\tCalle:" + direccionEntrega.getCalle()
-									+ "\n\t\t\tNúmero:" + direccionEntrega.getNumero()
-									+ "\n\t\t\tCódigo Postal:" + direccionEntrega.getCodigoPostal()
-									+ "\n\t\t\tPoblación:" + direccionEntrega.getPoblacion()
-									+ "\n\t\t\tPaís:" + direccionEntrega.getPais()
-									+ "\n\t\tDestinatario: " + pedido.getDestinatario()
-									+ "\n\t\tFecha de entrega estimada: " + pedido.getFechaDeEntregaEstimada() + "]\n";
-								}
-							}
-							else {
-								output += "\tSin direccion de entrega...\n";
+					output += "\n\t[Cantidad: " + pedido.getCantidad()
+					+ "\n\tDestinatario: " + pedido.getDestinatario()
+					+ "\n\tFecha de entrega estimada: " + pedido.getFechaDeEntregaEstimada();
+					
+					for (int i = 0; i < pedidos.size(); i++) {
+						if (pedidos.get(i).getProductos().size() > 0) {
+							for (int j = 0; j < pedidos.get(i).getProductos().size(); j++) {
+								output += "\t- Producto "
+										+ "\n\t\tCodigo: " + pedidos.get(i).getProductos().get(j).getCodigo()
+										+ "\n\t\tNombre: " + pedidos.get(i).getProductos().get(j).getNombre()
+										+ "\n\t\tDescripción: " + pedidos.get(i).getProductos().get(j).getDescripcion()
+										+ "\n\t\tStock: " + pedidos.get(i).getProductos().get(j).getStock() 
+										+ "\n\t\tLocalización: " + pedidos.get(i).getProductos().get(j).getLocalizacion()
+										+ "\n\t\tPendiente: " + pedidos.get(i).getProductos().get(j).getPendiente();
 							}
 						}
-					}
-					else {
-						output += "\tSin productos...\n";
+						else {
+							output += "\tSin productos...\n";
+						}
+						
+						if (pedidos.get(i).getDireccionEntrega().size() > 0) {
+							for (int j = 0; j < pedidos.get(i).getProductos().size(); j++) {
+								output += "\n\t- Dirección "
+										+ "\n\t\tCalle:" + pedidos.get(i).getDireccionEntrega().get(j).getCalle()
+										+ "\n\t\tNúmero:" + pedidos.get(i).getDireccionEntrega().get(j).getNumero()
+										+ "\n\t\tCódigo Postal:" + pedidos.get(i).getDireccionEntrega().get(j).getCodigoPostal()
+										+ "\n\t\tPoblación:" + pedidos.get(i).getDireccionEntrega().get(j).getPoblacion()
+										+ "\n\t\tPaís:" + pedidos.get(i).getDireccionEntrega().get(j).getPais() + "]\n";
+							}
+						}
+						else{
+							output += "\tSin Direcciones de entrega...\n";
+						}
 					}
 				}
 			} else {
@@ -285,50 +291,16 @@ public class Almacen {
 		System.out.println(output);
 	}
 
-	
-	public void printDirecciones(String encabezado) {
-		
-		String output = "=================[ " + encabezado + " ]=================\n";
-		
-		if (direcciones.size() > 0) {
-			for (Direccion direccion : direcciones) {
-				output += "\t[- Dirección"
-						+ "\n\t\t\tCalle:" + direccion.getCalle()
-						+ "\n\t\t\tNúmero:" + direccion.getNumero()
-						+ "\n\t\t\tCódigo Postal:" + direccion.getCodigoPostal()
-						+ "\n\t\t\tPoblación:" + direccion.getPoblacion()
-						+ "\n\t\t\tPaís:" + direccion.getPais() + "]\n";
-			}
-		}
-		else {
-			output += "\tSin direcciones...\n";
-		}
-		
-		System.out.println(output);
-	}
-
 	public void addClientes(Clientes cliente) {
 		this.clientes.add(cliente);
 	}
-
-	public void removeClientes(int index) {
-		this.clientes.remove(index);
-	}
-
+	
 	public void addProducto(Producto producto) {
 		this.productos.add(producto);
 	}
 
-	public void removeProducto(int index) {
-		this.productos.remove(index);
-	}
-
 	public void addPedidos(Pedidos pedido) {
 		this.pedidos.add(pedido);
-	}
-
-	public void removePedidos(int index) {
-		this.pedidos.remove(index);
 	}
 
 	public String toJSON() {		
@@ -354,14 +326,6 @@ public class Almacen {
 
 	public ArrayList<Pedidos> getPedidos() {
 		return pedidos;
-	}
-	
-	public ArrayList<Direccion> getDirecciones() {
-		return direcciones;
-	}
-
-	public ArrayList<DireccionEntrega> getDireccionesEntrega() {
-		return direccionesEntrega;
 	}
 
 }

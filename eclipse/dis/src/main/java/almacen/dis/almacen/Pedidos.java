@@ -6,13 +6,15 @@ import almacen.dis.almacen.direccionEntrega.DireccionEntrega;
 
 public class Pedidos {
 
+	private String idPedido;
 	private ArrayList<Producto> productos;
 	private int cantidad;
 	private ArrayList<DireccionEntrega> direccionEntrega;
 	private String destinatario;
 	private String fechaDeEntregaEstimada;
 
-	public Pedidos(ArrayList<Producto> productos, int cantidad, ArrayList<DireccionEntrega> direccionEntrega, String destinatario, String fechaDeEntregaEstimada){
+	public Pedidos(String idPedido, ArrayList<Producto> productos, int cantidad, ArrayList<DireccionEntrega> direccionEntrega, String destinatario, String fechaDeEntregaEstimada){
+		this.idPedido = idPedido;
 		this.setProductos(new ArrayList<Producto>());
 		this.cantidad = cantidad;
 		this.destinatario = destinatario;
@@ -58,5 +60,13 @@ public class Pedidos {
 
 	public void setFechaDeEntregaEstimada(String fechaDeEntregaEstimada) {
 		this.fechaDeEntregaEstimada = fechaDeEntregaEstimada;
+	}
+
+	public String getIdPedido() {
+		return idPedido;
+	}
+
+	public void setIdPedido(String idPedido) {
+		this.idPedido = idPedido;
 	}
 }

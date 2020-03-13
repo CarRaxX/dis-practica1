@@ -18,6 +18,10 @@ public class Clientes {
 		this.telfContacto =telfContacto;
 		this.setDireccion(new ArrayList<Direccion>());
 	}
+	
+	public void addDireccion(Direccion direccion) {
+		this.direccion.add(direccion);
+	}
 
 	public String getNombre() {
 		return nombre;
