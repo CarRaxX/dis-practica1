@@ -1,0 +1,119 @@
+<?xml encoding="UTF-8"?>
+
+<!ELEMENT Almacen_Almacen (DatosAlmacen,Clientes,Productos,Pedidos)>
+<!ATTLIST Almacen_Almacen
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT DatosAlmacen (AlmacenID)>
+<!ATTLIST DatosAlmacen
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Clientes (Cliente)>
+<!ATTLIST Clientes
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Productos (Producto)>
+<!ATTLIST Productos
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Pedidos (Pedido)>
+<!ATTLIST Pedidos
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT AlmacenID (#PCDATA)>
+<!ATTLIST AlmacenID
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Cliente (Nombre,Apellidos,Email,Telf.Contacto,Direccion)>
+<!ATTLIST Cliente
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Pedido (IDPedido,Producto,Cantidad,DireccionDeEntrega,
+                  Destinatario,FechaDeEntregaEstimada)>
+<!ATTLIST Pedido
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Apellidos (#PCDATA)>
+<!ATTLIST Apellidos
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Email (#PCDATA)>
+<!ATTLIST Email
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Telf.Contacto (#PCDATA)>
+<!ATTLIST Telf.Contacto
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Direccion (Calle,Número,CódigoPostal,Población,País)>
+<!ATTLIST Direccion
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT IDPedido (#PCDATA)>
+<!ATTLIST IDPedido
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Cantidad (#PCDATA)>
+<!ATTLIST Cantidad
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT DireccionDeEntrega (Calle,Número,CódigoPostal,Población,País)>
+<!ATTLIST DireccionDeEntrega
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Destinatario (#PCDATA)>
+<!ATTLIST Destinatario
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT FechaDeEntregaEstimada (#PCDATA)>
+<!ATTLIST FechaDeEntregaEstimada
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Nombre (#PCDATA)>
+<!ATTLIST Nombre
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Calle (#PCDATA)>
+<!ATTLIST Calle
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Número (#PCDATA)>
+<!ATTLIST Número
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT CódigoPostal (#PCDATA)>
+<!ATTLIST CódigoPostal
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Población (#PCDATA)>
+<!ATTLIST Población
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT País (#PCDATA)>
+<!ATTLIST País
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Producto (Código,Nombre,Descripción,Stock,Localización?,
+                    Pendientes)>
+<!ATTLIST Producto
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Código (#PCDATA)>
+<!ATTLIST Código
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Descripción (#PCDATA)>
+<!ATTLIST Descripción
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Stock (#PCDATA)>
+<!ATTLIST Stock
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Localización (#PCDATA)>
+<!ATTLIST Localización
+  xmlns CDATA #FIXED ''>
+
+<!ELEMENT Pendientes (#PCDATA)>
+<!ATTLIST Pendientes
+  xmlns CDATA #FIXED ''>
